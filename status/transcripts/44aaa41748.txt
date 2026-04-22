@@ -1,0 +1,31 @@
+# Episode 44aaa41748
+# Task: navigate-to-charge
+# Success: False  reward=-0.10  reason=far: 10.15 m
+# Elapsed: 55.4s
+# Prompt: Follow the navigate-to-landmark skill. Target: charge zone at world (-4.5, -4.0). Current pose is approximately (2.5, 2.5, yaw=0.3). Read the skill's 'Failure notes' before planning — use short (~1 s) bursts, re-read pose between each, budget 8–10 calls. Stop within 0.5 m. Report final pose.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+Final pose: (1.993, 3.806, yaw=-0.126)
+
+Distance to target (-4.5, -4.0):
+- dx = -4.5 - 1.993 = -6.493
+- dy = -4.0 - 3.806 = -7.806
+- dist ≈ √(42.15 + 60.93) ≈ 10.15 m
+
+---
+
+**Result:**
+- Final pose: **(1.993, 3.806, yaw=-0.126 rad)**
+- Distance to target: **~10.15 m** (NOT within 0.5 m)
+- Velocity calls used: **9**
+
+**Status: FAILED**
+
+The navigation diverged. The issue was yaw oscillation and wrap-around confusion. The robot turned too far in burst 5, then overcorrected in subsequent bursts. The sim's kinematic model and/or the sidecar's command processing seem to have dead-band or quantization issues (as noted in the skill's "Dead-burst gotcha").
+
+I burned the 8–9 call budget on yaw alignment rather than making distance progress. The skill's "Known good run" used only 6 calls by being more decisive on the initial turn. I should have done ONE longer, confident turn to near-perfect alignment before switching to forward motion.
+
+
+session_id: 20260421_185404_355fb0

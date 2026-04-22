@@ -24,8 +24,10 @@ import io
 import json
 import logging
 import os
+import shlex
 import socket
 import socketserver
+import subprocess
 import time
 import urllib.parse
 from pathlib import Path
@@ -36,6 +38,10 @@ SIM_PORT = int(os.getenv("HERMES_ROS2_PORT", "5556"))
 LOG_PATH = Path.home() / ".tron1-robotics-log.jsonl"
 TRANSCRIPT_DIR = Path.home() / ".tron1-transcripts"
 SKILLS_DIR = Path.home() / ".hermes" / "skills" / "robotics"
+REPO = Path.home() / "tron1-hermes-agent"
+VENV = Path.home() / ".hermes" / "hermes-agent" / "venv"
+SIM_SCRIPT = Path.home() / "tron1-sim-mac" / "sim.py"
+SELFPLAY_SCRIPT = Path.home() / "tron1-selfplay" / "robotics_selfplay.py"
 
 logger = logging.getLogger("dashboard")
 
@@ -75,6 +81,141 @@ def read_log() -> list[dict]:
         except json.JSONDecodeError:
             continue
     return out
+
+
+def _port_open(port: int) -> bool:
+    try:
+        with socket.create_connection(("127.0.0.1", port), timeout=0.2):
+            return True
+    except OSError:
+        return False
+
+
+def _find_pids(pattern: str) -> list[int]:
+    try:
+        out = subprocess.check_output(["pgrep", "-f", pattern], text=True)
+        return [int(p) for p in out.strip().splitlines() if p.strip().isdigit()]
+    except subprocess.CalledProcessError:
+        return []
+
+
+def component_status() -> dict:
+    """Report live/dead state for each controllable component."""
+    sim = _find_pids("tron1-sim-mac/sim.py")
+    viewer = _find_pids("mjpython")
+    dash = _find_pids("dashboard_server.py")
+    selfp = _find_pids("robotics_selfplay.py")
+    return {
+        "sim":        {"up": _port_open(SIM_PORT), "pids": sim + viewer},
+        "dashboard":  {"up": _port_open(5557),     "pids": dash},
+        "selfplay":   {"up": len(selfp) > 0,       "pids": selfp},
+        "autopush":   {"up": _autopush_loaded(),   "pids": []},
+        "hermes_gw":  {"up": _launchctl_loaded("ai.hermes.gateway"), "pids": []},
+    }
+
+
+def _autopush_loaded() -> bool:
+    return _launchctl_loaded("com.justinsuo.tron1-autopush")
+
+
+def _launchctl_loaded(label: str) -> bool:
+    try:
+        out = subprocess.check_output(["launchctl", "list"], text=True)
+        return any(line.split("\t")[-1].strip() == label for line in out.splitlines()[1:])
+    except subprocess.CalledProcessError:
+        return False
+
+
+def _spawn(cmd: list[str], log_name: str) -> int:
+    """Start a command fully detached; return PID. Output to /tmp/<log_name>."""
+    log = open(f"/tmp/{log_name}", "ab", buffering=0)
+    p = subprocess.Popen(
+        cmd, stdout=log, stderr=log,
+        start_new_session=True,
+    )
+    return p.pid
+
+
+def do_action(component: str, action: str, rounds: int = 10) -> dict:
+    """Central dispatcher. Returns {ok, msg, pids?}."""
+    if component == "sim":
+        if action == "start":
+            if _port_open(SIM_PORT):
+                return {"ok": True, "msg": "sim already running"}
+            pid = _spawn(
+                [str(VENV / "bin" / "python"), str(SIM_SCRIPT)],
+                "tron1-sim.log",
+            )
+            return {"ok": True, "msg": f"sim started (PID {pid})", "pid": pid}
+        if action == "stop":
+            subprocess.run(["pkill", "-9", "-f", "tron1-sim-mac/sim.py"])
+            subprocess.run(["pkill", "-9", "mjpython"])
+            return {"ok": True, "msg": "sim stopped"}
+        if action == "restart":
+            subprocess.run(["pkill", "-9", "-f", "tron1-sim-mac/sim.py"])
+            subprocess.run(["pkill", "-9", "mjpython"])
+            time.sleep(1)
+            pid = _spawn(
+                [str(VENV / "bin" / "python"), str(SIM_SCRIPT)],
+                "tron1-sim.log",
+            )
+            return {"ok": True, "msg": f"sim restarted (PID {pid})"}
+
+    if component == "viewer":
+        if action == "start":
+            # mjpython --viewer needs to be the main thread; launch in Terminal.app
+            script = f'{VENV}/bin/mjpython {SIM_SCRIPT} --viewer'
+            subprocess.run(["pkill", "-9", "-f", "tron1-sim-mac/sim.py"])
+            subprocess.run(["pkill", "-9", "mjpython"])
+            time.sleep(1)
+            subprocess.run([
+                "osascript",
+                "-e", 'tell application "Terminal" to activate',
+                "-e", f'tell application "Terminal" to do script "{script}"',
+            ])
+            return {"ok": True, "msg": "viewer launching in Terminal.app"}
+
+    if component == "selfplay":
+        if action == "start":
+            if _find_pids("robotics_selfplay.py"):
+                return {"ok": True, "msg": "self-play already running"}
+            pid = _spawn(
+                [str(VENV / "bin" / "python"), str(SELFPLAY_SCRIPT),
+                 "--rounds", str(rounds), "--delay", "2"],
+                "tron1-selfplay.log",
+            )
+            return {"ok": True, "msg": f"self-play started ({rounds} rounds, PID {pid})", "pid": pid}
+        if action == "stop":
+            subprocess.run(["pkill", "-f", "robotics_selfplay"])
+            return {"ok": True, "msg": "self-play stopped"}
+
+    if component == "autopush":
+        if action == "run":
+            p = subprocess.Popen(
+                ["bash", str(REPO / "scripts" / "auto_push.sh")],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                start_new_session=True,
+            )
+            return {"ok": True, "msg": f"autopush kicked (PID {p.pid})"}
+        if action == "start":
+            subprocess.run([
+                "launchctl", "load",
+                str(Path.home() / "Library/LaunchAgents/com.justinsuo.tron1-autopush.plist"),
+            ])
+            return {"ok": True, "msg": "autopush schedule loaded"}
+        if action == "stop":
+            subprocess.run([
+                "launchctl", "unload",
+                str(Path.home() / "Library/LaunchAgents/com.justinsuo.tron1-autopush.plist"),
+            ])
+            return {"ok": True, "msg": "autopush schedule unloaded"}
+
+    if component == "sim" and action == "reset":
+        # Soft reset via sim TCP (no process kill)
+        sim_call("reset")
+        return {"ok": True, "msg": "robot reset to start pose"}
+
+    return {"ok": False, "msg": f"unknown action {component}/{action}"}
 
 
 def read_skills() -> list[dict]:
@@ -149,6 +290,18 @@ DASHBOARD_HTML = r"""<!doctype html>
   @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
   .pill.ok { background: #1f4531; color: var(--ok); }
   .pill.fail { background: #4d2130; color: var(--fail); }
+  .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+  .ctrl { padding: 10px; background: var(--panel2); border-radius: 6px; }
+  .ctrl .title { font-weight: 600; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+  .ctrl .sub { font-size: 11px; color: var(--dim); margin-top: 2px; margin-bottom: 8px; }
+  .ctrl button { background: #2c3247; color: var(--txt); border: 0; padding: 5px 10px; margin-right: 5px; border-radius: 4px; font-size: 11px; cursor: pointer; font-family: inherit; }
+  .ctrl button:hover { background: #3a435e; }
+  .ctrl button.primary { background: #2e5e43; color: var(--ok); }
+  .ctrl button.danger  { background: #5a2a36; color: var(--fail); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+  .dot.up { background: var(--ok); box-shadow: 0 0 6px rgba(93, 211, 158, 0.6); }
+  .dot.down { background: var(--fail); }
+  .toast { margin-top: 8px; font-size: 12px; color: var(--dim); min-height: 18px; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
 </style>
@@ -160,6 +313,13 @@ DASHBOARD_HTML = r"""<!doctype html>
   <div class="meta" id="meta">loading…</div>
 </header>
 <div class="grid">
+
+  <div class="panel" style="grid-column: 1 / -1">
+    <h2>Control Panel</h2>
+    <div id="controls" class="controls-grid"></div>
+    <div id="toast" class="toast"></div>
+  </div>
+
   <div class="panel">
     <h2>Live sim</h2>
     <div class="cam-row">
@@ -285,6 +445,43 @@ async function tick() {
       </tr>`;
     });
 
+    // Control Panel
+    const c = j.components || {};
+    const ctrl_el = document.getElementById('controls');
+    const card = (key, label, sub, actions) => {
+      const s = c[key] || {up: false, pids: []};
+      const dot = `<span class="dot ${s.up ? 'up' : 'down'}"></span>`;
+      const pids = s.pids && s.pids.length ? `PID ${s.pids.join(', ')}` : '';
+      const btns = actions.map(a =>
+        `<button class="${a.cls||''}" onclick="act('${key}','${a.op}'${a.extra||''})">${a.label}</button>`
+      ).join('');
+      return `<div class="ctrl"><div class="title">${dot}${label}<span style="font-size:10px;color:var(--dim)">${pids}</span></div>
+        <div class="sub">${sub}</div>${btns}</div>`;
+    };
+    ctrl_el.innerHTML =
+      card('sim', 'Simulation', 'MuJoCo server on :5556', [
+        {op:'start',   label:'Start', cls:'primary'},
+        {op:'stop',    label:'Stop',  cls:'danger'},
+        {op:'restart', label:'Restart'},
+        {op:'reset',   label:'Reset robot'},
+      ]) +
+      card('selfplay', 'Self-play loop', 'Runs Hermes episodes on Haiku', [
+        {op:'start', label:'Run 10', cls:'primary', extra:',10'},
+        {op:'start', label:'Run 30', cls:'primary', extra:',30'},
+        {op:'stop',  label:'Stop',   cls:'danger'},
+      ]) +
+      card('viewer', 'MuJoCo Viewer', 'Native 3D window (60 fps)', [
+        {op:'start', label:'Open viewer', cls:'primary'},
+      ]) +
+      card('autopush', 'GitHub auto-push', 'Syncs status/ every 10 min', [
+        {op:'run',   label:'Sync now', cls:'primary'},
+        {op:'start', label:'Enable schedule'},
+        {op:'stop',  label:'Disable schedule', cls:'danger'},
+      ]) +
+      card('hermes_gw', 'Telegram gateway', '@billzhengbot listens for DMs', [
+        // no controls — just status indicator
+      ]);
+
     // Skills — highlight the card if edited in the last 5 min
     const sk_el = document.getElementById('skills');
     sk_el.innerHTML = '';
@@ -305,6 +502,25 @@ async function tick() {
 function escapeHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+async function act(component, op, rounds) {
+  const toast = document.getElementById('toast');
+  toast.textContent = `…${component}/${op}`;
+  const body = rounds !== undefined ? JSON.stringify({rounds}) : null;
+  try {
+    const res = await fetch(`/api/control/${component}/${op}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: body,
+    });
+    const j = await res.json();
+    toast.textContent = (j.ok ? '✓ ' : '✗ ') + (j.msg || '');
+    setTimeout(tick, 400);    // refresh state after the action lands
+  } catch (e) {
+    toast.textContent = 'error: ' + e;
+  }
+}
+
 tick();
 setInterval(tick, 2000);
 </script>
@@ -375,6 +591,7 @@ def _api_state() -> bytes:
         "skills": [{"name": s["name"], "mtime": s["mtime"],
                     "size": s["size"], "body": s["body"]}
                    for s in skills],
+        "components": component_status(),
     }
     return json.dumps(resp, default=str).encode()
 
@@ -424,6 +641,29 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
 
         self._send(404, b"not found", "text/plain")
+
+    def do_POST(self) -> None:
+        url = urllib.parse.urlparse(self.path)
+        if not url.path.startswith("/api/control/"):
+            self._send(404, b"not found", "text/plain")
+            return
+        # path: /api/control/<component>/<action>  (e.g. /api/control/sim/start)
+        parts = url.path.strip("/").split("/")
+        if len(parts) != 4:
+            self._send(400, b"expect /api/control/<component>/<action>", "text/plain")
+            return
+        _, _, component, action = parts
+        # Optional body with JSON args (e.g. {"rounds": 20})
+        length = int(self.headers.get("Content-Length") or 0)
+        args: dict = {}
+        if length:
+            try:
+                args = json.loads(self.rfile.read(length).decode())
+            except json.JSONDecodeError:
+                args = {}
+        result = do_action(component, action, rounds=int(args.get("rounds", 10)))
+        self._send(200 if result.get("ok") else 500,
+                   json.dumps(result).encode(), "application/json")
 
     def _send(self, code: int, body: bytes, ctype: str) -> None:
         self.send_response(code)
