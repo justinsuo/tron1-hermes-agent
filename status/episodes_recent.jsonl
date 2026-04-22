@@ -1,23 +1,3 @@
-{"ts":1776812363.041431,"event":"episode_start","episode_id":"dbfcb27a82","task":"count-obstacles","backend":"mujoco-mac"}
-{"ts":1776812366.2844968,"event":"episode_end","episode_id":"8d3a1435a5","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.5,"reason":"hermes timed out","duration_s":150.019,"evidence":["rc=124","len=9","task=read-gauge-N"]}
-{"ts":1776812368.2909381,"event":"episode_start","episode_id":"d7c4af44b4","task":"read-gauge-N","backend":"mujoco-mac"}
-{"ts":1776812445.642978,"event":"episode_end","episode_id":"dbfcb27a82","task":"count-obstacles","backend":"mujoco-mac","success":true,"reward":0.3,"reason":"pred 3 vs 4 (close)","duration_s":82.602,"evidence":["rc=0","len=716","task=count-obstacles"]}
-{"ts":1776812447.6541572,"event":"episode_start","episode_id":"5067e812ba","task":"count-obstacles","backend":"mujoco-mac"}
-{"ts":1776812518.3169851,"event":"episode_end","episode_id":"d7c4af44b4","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.5,"reason":"hermes timed out","duration_s":150.026,"evidence":["rc=124","len=9","task=read-gauge-N"]}
-{"ts":1776812520.327777,"event":"episode_start","episode_id":"d048d1f403","task":"count-obstacles","backend":"mujoco-mac"}
-{"ts":1776812545.72642,"event":"episode_end","episode_id":"5067e812ba","task":"count-obstacles","backend":"mujoco-mac","success":true,"reward":1.0,"reason":"correct count = 4","duration_s":98.072,"evidence":["rc=0","len=511","task=count-obstacles"]}
-{"ts":1776812547.7383108,"event":"episode_start","episode_id":"752c2a038d","task":"find-door","backend":"mujoco-mac"}
-{"ts":1776812559.2374132,"event":"episode_end","episode_id":"d048d1f403","task":"count-obstacles","backend":"mujoco-mac","success":true,"reward":0.3,"reason":"pred 3 vs 4 (close)","duration_s":38.91,"evidence":["rc=0","len=592","task=count-obstacles"]}
-{"ts":1776812561.2490659,"event":"episode_start","episode_id":"5088b32fe9","task":"read-gauge-N","backend":"mujoco-mac"}
-{"ts":1776812711.324665,"event":"episode_end","episode_id":"5088b32fe9","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.5,"reason":"hermes timed out","duration_s":150.076,"evidence":["rc=124","len=9","task=read-gauge-N"]}
-{"ts":1776812713.337334,"event":"episode_start","episode_id":"243d262f8d","task":"count-obstacles","backend":"mujoco-mac"}
-{"ts":1776812786.939593,"event":"episode_end","episode_id":"243d262f8d","task":"count-obstacles","backend":"mujoco-mac","success":true,"reward":1.0,"reason":"correct count = 4","duration_s":73.602,"evidence":["rc=0","len=545","task=count-obstacles"]}
-{"ts":1776812788.0895581,"event":"episode_end","episode_id":"752c2a038d","task":"find-door","backend":"mujoco-mac","success":false,"reward":-0.5,"reason":"hermes timed out","duration_s":240.351,"evidence":["rc=124","len=9","task=find-door"]}
-{"ts":1776812790.100585,"event":"episode_start","episode_id":"45137ee3f7","task":"read-any-gauge","backend":"mujoco-mac"}
-{"ts":1776812841.707564,"event":"episode_start","episode_id":"3b7176e3d8","task":"read-gauge-N","backend":"mujoco-mac"}
-{"ts":1776812885.06052,"event":"episode_end","episode_id":"45137ee3f7","task":"read-any-gauge","backend":"mujoco-mac","success":false,"reward":-0.3,"reason":"no JSON reading","duration_s":94.96,"evidence":["rc=0","len=296","task=read-any-gauge"]}
-{"ts":1776812887.068506,"event":"episode_start","episode_id":"c5d80f2ed1","task":"find-door","backend":"mujoco-mac"}
-{"ts":1776812988.7369778,"event":"episode_end","episode_id":"3b7176e3d8","task":"read-gauge-N","backend":"mujoco-mac","success":true,"reward":0.3,"reason":"marginal err 12.3%","duration_s":147.029,"evidence":["rc=0","len=365","task=read-gauge-N"]}
 {"ts":1776812990.7495072,"event":"episode_start","episode_id":"a4905e6f13","task":"read-any-gauge","backend":"mujoco-mac"}
 {"ts":1776813127.0906749,"event":"episode_end","episode_id":"c5d80f2ed1","task":"find-door","backend":"mujoco-mac","success":false,"reward":-0.5,"reason":"hermes timed out","duration_s":240.022,"evidence":["rc=124","len=9","task=find-door"]}
 {"ts":1776813129.100147,"event":"episode_start","episode_id":"19599c411d","task":"find-door","backend":"mujoco-mac"}
@@ -498,3 +478,23 @@
 {"ts":1776832880.156432,"event":"episode_start","episode_id":"4d7797196e","task":"read-any-gauge","backend":"mujoco-mac"}
 {"ts":1776832929.461086,"event":"episode_end","episode_id":"4d7797196e","task":"read-any-gauge","backend":"mujoco-mac","success":true,"reward":0.69,"reason":"E err 4.7%","duration_s":49.305,"evidence":["rc=0","len=707","task=read-any-gauge"]}
 {"ts":1776832932.510894,"event":"episode_start","episode_id":"728a25f079","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776832984.962111,"event":"episode_end","episode_id":"728a25f079","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.2,"reason":"err 36.7%, units_ok=True","duration_s":52.451,"evidence":["rc=0","len=564","task=read-gauge-N"]}
+{"ts":1776832996.329868,"event":"episode_start","episode_id":"101fcaf3e1","task":"read-any-gauge","backend":"mujoco-mac"}
+{"ts":1776833012.4981918,"event":"episode_end","episode_id":"101fcaf3e1","task":"read-any-gauge","backend":"mujoco-mac","success":false,"reward":-0.1,"reason":"N err 25.5% (too high)","duration_s":16.168,"evidence":["rc=0","len=513","task=read-any-gauge"]}
+{"ts":1776833023.4493241,"event":"episode_start","episode_id":"e151028ed9","task":"read-any-gauge","backend":"mujoco-mac"}
+{"ts":1776833047.195557,"event":"episode_end","episode_id":"e151028ed9","task":"read-any-gauge","backend":"mujoco-mac","success":false,"reward":-0.1,"reason":"E err 21.1% (too high)","duration_s":23.746,"evidence":["rc=0","len=618","task=read-any-gauge"]}
+{"ts":1776833063.330444,"event":"episode_start","episode_id":"c24f32aa3e","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776833129.334388,"event":"episode_end","episode_id":"c24f32aa3e","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.2,"reason":"err 18.6%, units_ok=False","duration_s":66.004,"evidence":["rc=0","len=919","task=read-gauge-N"]}
+{"ts":1776833141.027084,"event":"episode_start","episode_id":"1ce91726bb","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776833220.006795,"event":"episode_end","episode_id":"1ce91726bb","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.2,"reason":"err 16.1%, units_ok=True","duration_s":78.98,"evidence":["rc=0","len=1267","task=read-gauge-N"]}
+{"ts":1776833232.745024,"event":"episode_start","episode_id":"6604f1440b","task":"navigate-home","backend":"mujoco-mac"}
+{"ts":1776833280.029182,"event":"episode_end","episode_id":"6604f1440b","task":"navigate-home","backend":"mujoco-mac","success":true,"reward":0.3,"reason":"close: 1.34m","duration_s":47.284,"evidence":["rc=0","len=662","task=navigate-home"]}
+{"ts":1776833283.067043,"event":"episode_start","episode_id":"08aeed8bc9","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776833334.164022,"event":"episode_end","episode_id":"08aeed8bc9","task":"read-gauge-N","backend":"mujoco-mac","success":true,"reward":0.68725,"reason":"err 6.3% on PSI","duration_s":51.097,"evidence":["rc=0","len=855","task=read-gauge-N"]}
+{"ts":1776833337.2185102,"event":"episode_start","episode_id":"14d8523661","task":"navigate-to-charge","backend":"mujoco-mac"}
+{"ts":1776833386.018204,"event":"episode_end","episode_id":"14d8523661","task":"navigate-to-charge","backend":"mujoco-mac","success":false,"reward":-0.1,"reason":"far: 4.20 m","duration_s":48.8,"evidence":["rc=0","len=1268","task=navigate-to-charge"]}
+{"ts":1776833396.844089,"event":"episode_start","episode_id":"eae17a6ca8","task":"find-door","backend":"mujoco-mac"}
+{"ts":1776833448.16513,"event":"episode_end","episode_id":"eae17a6ca8","task":"find-door","backend":"mujoco-mac","success":true,"reward":0.2,"reason":"close: 1.03m","duration_s":51.321,"evidence":["rc=0","len=833","task=find-door"]}
+{"ts":1776833451.214327,"event":"episode_start","episode_id":"60d39d0628","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776833525.6406,"event":"episode_end","episode_id":"60d39d0628","task":"read-gauge-N","backend":"mujoco-mac","success":true,"reward":0.3,"reason":"marginal err 11.1%","duration_s":74.426,"evidence":["rc=0","len=1401","task=read-gauge-N"]}
+{"ts":1776833528.69066,"event":"episode_start","episode_id":"c1c5263be0","task":"read-gauge-N","backend":"mujoco-mac"}
