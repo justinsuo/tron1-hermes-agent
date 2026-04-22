@@ -10,11 +10,11 @@
 
 ## Live progress
 
-*Auto-updated every ~10 minutes. Last sync: **2026-04-21 18:40:10**.*
+*Auto-updated every ~10 minutes. Last sync: **2026-04-21 18:41:24**.*
 
 **122 total episodes · 57% success on the last 30**
 
-**pose** `(+0.00, -3.74, yaw=+1.57)`  
+**pose** `(+0.00, +5.47, yaw=+1.57)`  
 **gauges** N=8.98 V · E=92.98 °C · W=103.54 °C
 
 ### Per-task breakdown
