@@ -1,8 +1,8 @@
 # Live Progress
 
-**Last updated**: 2026-04-21 21:52:16  
+**Last updated**: 2026-04-21 22:02:18  
 
-**Total episodes**: 276  
+**Total episodes**: 284  
 
 **Success rate (last 30)**: 47%
 
@@ -15,16 +15,24 @@
 | `navigate-forward-2m` | 1/1 | 100% | +1.00 |
 | `count-obstacles` | 19/23 | 83% | +0.61 |
 | `find-door` | 13/18 | 72% | +0.12 |
-| `read-gauge-N` | 43/95 | 45% | +0.15 |
-| `navigate-to-charge` | 10/27 | 37% | +0.14 |
-| `read-any-gauge` | 18/62 | 29% | +0.11 |
-| `navigate-home` | 6/31 | 19% | -0.27 |
+| `read-gauge-N` | 44/98 | 45% | +0.15 |
+| `navigate-to-charge` | 10/28 | 36% | +0.13 |
+| `read-any-gauge` | 18/64 | 28% | +0.10 |
+| `navigate-home` | 7/33 | 21% | -0.26 |
 | `read-visible-gauge` | 0/1 | 0% | -0.20 |
 
 ## Last 15 episodes
 
 | # | task | result | reward | reason |
 |---|---|---|---|---|
+| 284 | `navigate-to-charge` | ✗ | -0.10 | far: 11.89 m |
+| 283 | `navigate-home` | ✓ | +0.30 | close: 0.69m |
+| 282 | `navigate-home` | ✗ | -0.50 | hermes timed out |
+| 281 | `read-any-gauge` | ✗ | -0.10 | N err 25.6% (too high) |
+| 280 | `read-any-gauge` | ✗ | -0.10 | N err 12.6% (too high) |
+| 279 | `read-gauge-N` | ✗ | -0.20 | err 15.2%, units_ok=True |
+| 278 | `read-gauge-N` | ✓ | +0.81 | err 3.8% on PSI |
+| 277 | `read-gauge-N` | ✗ | -0.20 | err 50.7%, units_ok=False |
 | 276 | `read-gauge-N` | ✓ | +0.30 | marginal err 11.1% |
 | 275 | `find-door` | ✓ | +0.20 | close: 1.03m |
 | 274 | `navigate-to-charge` | ✗ | -0.10 | far: 4.20 m |
@@ -32,11 +40,3 @@
 | 272 | `navigate-home` | ✓ | +0.30 | close: 1.34m |
 | 271 | `read-gauge-N` | ✗ | -0.20 | err 16.1%, units_ok=True |
 | 270 | `read-gauge-N` | ✗ | -0.20 | err 18.6%, units_ok=False |
-| 269 | `read-any-gauge` | ✗ | -0.10 | E err 21.1% (too high) |
-| 268 | `read-any-gauge` | ✗ | -0.10 | N err 25.5% (too high) |
-| 267 | `read-gauge-N` | ✗ | -0.20 | err 36.7%, units_ok=True |
-| 266 | `read-any-gauge` | ✓ | +0.69 | E err 4.7% |
-| 265 | `navigate-to-charge` | ✗ | -0.10 | far: 11.85 m |
-| 264 | `find-door` | ✓ | +0.59 | door dist 0.82m bearing +9° |
-| 263 | `navigate-to-charge` | ✓ | +0.20 | marginally close: 0.97 m |
-| 262 | `read-gauge-N` | ✓ | +0.98 | err 0.4% on BAR |
