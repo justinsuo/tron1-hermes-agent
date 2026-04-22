@@ -121,6 +121,7 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 - 2026-04-21 run failed with "no gauge matches units '°C'" after returning {value:15.5, units:"°C"} with the dial described as a 0–30 scale — a 0–30 range is atypical for °C and likely indicates a different scale (e.g. BAR, m/s, %) whose labels weren't legible. When the reported units don't fit the observed scale range (°C dials typically span ≥50 units, 0–30 suggests BAR/flow/percent), re-capture closer until scale unit text is readable rather than guessing °C from needle context.
 
 - 2026-04-21 run `read-gauge-N` failed with 44.4% error after reporting 16.5 V as an "interpolated sub-integer value between the two reliable reads" — manually interpolating a midpoint between two disagreeing voltmeter captures is just averaging in disguise and inherits both captures' biases. When two V reads disagree, take a mandatory third capture ≥20 cm closer and report that single reading, never a hand-picked midpoint.
+- 2026-04-21 run `read-gauge-N` failed with 41.2% error after reporting 15.5 V as \"the capture closest to the spec'd y=4.65\" — pose-proximity to the ideal stopping-distance heuristic does NOT validate a voltmeter reading, and picking the single capture nearest target-y still violates the ≥2-captures rule. Never use pose-distance as a tiebreaker or single-capture justifier for V readings; always take ≥2 captures from materially different poses and a third closer if they disagree, regardless of which one landed nearest y≈4.65.
 
 ## Self-improvement hook
 

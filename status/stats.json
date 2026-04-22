@@ -1,6 +1,6 @@
 {
-  "total": 125,
-  "recent_rate_pct": 50.0,
+  "total": 127,
+  "recent_rate_pct": 53.3,
   "per_task": {
     "describe-scene": {
       "ok": 11,
@@ -21,16 +21,16 @@
       "avg_reward": 1.0
     },
     "count-obstacles": {
-      "ok": 14,
-      "total": 15,
-      "rate_pct": 93.3,
-      "avg_reward": 0.687
+      "ok": 15,
+      "total": 16,
+      "rate_pct": 93.8,
+      "avg_reward": 0.706
     },
     "read-gauge-N": {
       "ok": 18,
-      "total": 35,
-      "rate_pct": 51.4,
-      "avg_reward": 0.188
+      "total": 36,
+      "rate_pct": 50.0,
+      "avg_reward": 0.177
     },
     "navigate-home": {
       "ok": 1,
@@ -57,5 +57,5 @@
       "avg_reward": 0.316
     }
   },
-  "ts": 1776822428.648649
+  "ts": 1776822699.4091341
 }
