@@ -139,6 +139,7 @@ final answer.
 - 2026-04-21 navigate-to-charge final attempt stopped at 4.20 m remaining after ~8 forward bursts at 0.8 m/s couldn't close final 4+ m on long diagonal (~9.5 m): **Always prefer `tron1_goto` (Nav2) for cross-arena targets >8 m instead of closed-loop velocity.** Closed-loop doesn't have sufficient budget or acceleration profile to reach distant targets on diagonals.
 - 2026-04-21 navigate-home timed out (ninth occurrence, empty transcript on re-run): hermes wall-clock timeout with no output means sidecar initialization is hung/unresponsive before the first tool call completes. On future task entry with this pattern, emit diagnostic text immediately (no tool calls) to surface failure reason to user.
 - 2026-04-21 navigate-to-charge failed with 11.89 m remaining after 10 velocity calls on 9.5 m diagonal: Cross-arena targets >9 m with large initial yaw error exhaust closed-loop velocity budget on angular correction alone; use `tron1_goto` (Nav2) instead.
+- 2026-04-21 navigate-to-charge failed again (5.46 m far) after 10 velocity calls on cross-arena diagonal: Closed-loop velocity control hits the yaw-correction bottleneck for targets >9 m; skill explicitly notes Nav2 unreliability in this sim but 10-call budget is insufficient. Future runs: escalate to `tron1_goto` (Nav2) with 12–14 call budget, or abandon closed-loop velocity entirely for this distance.
 
 ## Known good tunings (learned from self-play)
 

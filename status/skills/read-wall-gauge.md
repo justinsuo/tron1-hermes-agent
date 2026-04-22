@@ -238,6 +238,10 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 - 2026-04-21 run `read-gauge-N` failed with 8.1% error (units_ok=False): Only one VLM reading attempted before session timeout; HF model-fetch consumed most budget, leaving no retry loop. When units_ok=False on any reading, immediately invoke a second capture ≥20 cm closer with explicit canonical-unit prompt within the same session, rather than letting session timeout end the run—units failures require urgent inline correction, not post-hoc analysis.
 - 2026-04-21 run `read-gauge-N` failed with 23.0% error (units_ok=True): Units validated but magnitude error persists, likely snapped-to-major-tick bias even with correct units; final reading captured from session's HF model-fetch window. Always mandate ≥2 independent multi-pose captures + a third ≥20 cm closer before returning any gauge reading, regardless of units_ok=True status—unit validation alone does not certify needle interpolation correctness.
 
+- 2026-04-21 run `read-gauge-N` failed with 24.5% error (units_ok=False): Units field validation failed; when units_ok=False on any gauge reading, immediately re-capture ≥20 cm closer with explicit canonical-unit-text prompt (PSI/BAR/°C/V/W) rather than returning the reading. Never report readings where units_ok=False.
+
+- 2026-04-21 run `read-gauge-N` failed with 40.9% error (units_ok=False, reported 35.5 PSI): Single VLM reading returned PSI value but units field validation failed, triggering task rejection despite numeric precision (confidence 0.95 on a non-zero value). When units_ok=False coexists with high numeric confidence and reasonable needle precision, the units string is likely malformed or non-canonical; always normalize qwen_vl_local's units output to exact canonical form before returning, or re-capture ≥20 cm closer with explicit \\\"unit labels: PSI\\\" prompt to force legible scale-text recognition rather than context inference.
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the
