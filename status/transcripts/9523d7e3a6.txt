@@ -1,0 +1,28 @@
+# Episode 9523d7e3a6
+# Task: navigate-to-charge
+# Success: False  reward=-0.10  reason=far: 4.94 m
+# Elapsed: 58.0s
+# Prompt: Follow the navigate-to-landmark skill. Target: charge zone at world (-4.5, -4.0). Current pose is approximately (2.5, 2.5, yaw=0.3). Read the skill's 'Failure notes' before planning — use short (~1 s) bursts, re-read pose between each, budget 8–10 calls. Stop within 0.5 m. Report final pose.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+Excellent. Final distance check:
+
+dx = -4.5 - (-1.945) = -2.555, dy = -4.0 - 0.228 = -4.228
+dist = sqrt(6.53 + 17.88) ≈ 4.93 m
+
+Still >0.5 m away, but we've used the full 10-call budget as required. The skill notes indicate that for this 9.5 m cross-arena diagonal, the yaw-correction bottleneck means reaching <0.5 m with closed-loop velocity alone is difficult; Nav2 (tron1_goto) is preferred.
+
+**FINAL REPORT:**
+
+Completed 10 velocity bursts (3 turn + 7 forward) with pose re-reads between each.
+
+Final pose: **x=-1.945, y=0.228, yaw=-2.278 rad**
+
+Distance from target (-4.5, -4.0): **4.93 m** (outside 0.5 m tolerance)
+
+Reason: Cross-arena targets >9 m on diagonal require either 12–14 velocity calls for pure closed-loop, or Nav2 (tron1_goto) for path planning. The 10-call budget allowed continuous forward progress but not final approach closure due to yaw-correction overhead during the long diagonal traverse.
+
+
+session_id: 20260421_222559_4af2e1

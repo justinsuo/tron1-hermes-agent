@@ -1,10 +1,10 @@
 {
-  "total": 302,
-  "recent_rate_pct": 50.0,
+  "total": 314,
+  "recent_rate_pct": 53.3,
   "per_task": {
     "describe-scene": {
-      "ok": 19,
-      "total": 19,
+      "ok": 20,
+      "total": 20,
       "rate_pct": 100.0,
       "avg_reward": 0.795
     },
@@ -27,10 +27,10 @@
       "avg_reward": 0.612
     },
     "read-gauge-N": {
-      "ok": 50,
-      "total": 111,
-      "rate_pct": 45.0,
-      "avg_reward": 0.142
+      "ok": 53,
+      "total": 115,
+      "rate_pct": 46.1,
+      "avg_reward": 0.156
     },
     "navigate-home": {
       "ok": 7,
@@ -39,10 +39,10 @@
       "avg_reward": -0.26
     },
     "read-any-gauge": {
-      "ok": 19,
-      "total": 65,
-      "rate_pct": 29.2,
-      "avg_reward": 0.108
+      "ok": 21,
+      "total": 69,
+      "rate_pct": 30.4,
+      "avg_reward": 0.122
     },
     "find-door": {
       "ok": 13,
@@ -52,10 +52,10 @@
     },
     "navigate-to-charge": {
       "ok": 10,
-      "total": 29,
-      "rate_pct": 34.5,
-      "avg_reward": 0.125
+      "total": 32,
+      "rate_pct": 31.2,
+      "avg_reward": 0.104
     }
   },
-  "ts": 1776835342.088813
+  "ts": 1776835944.013929
 }
