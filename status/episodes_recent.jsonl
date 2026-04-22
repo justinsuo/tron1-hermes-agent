@@ -354,3 +354,13 @@
 {"ts":1776826382.0778298,"event":"episode_start","episode_id":"8158b04550","task":"count-obstacles","backend":"mujoco-mac"}
 {"ts":1776826422.096141,"event":"episode_end","episode_id":"8158b04550","task":"count-obstacles","backend":"mujoco-mac","success":true,"reward":1.0,"reason":"correct count = 4","duration_s":40.018,"evidence":["rc=0","len=1239","task=count-obstacles"]}
 {"ts":1776826425.146701,"event":"episode_start","episode_id":"90a9af5117","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776826479.563621,"event":"episode_end","episode_id":"90a9af5117","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.3,"reason":"no JSON reading in transcript","duration_s":54.417,"evidence":["rc=0","len=402","task=read-gauge-N"]}
+{"ts":1776826490.025517,"event":"episode_start","episode_id":"f1fe4cd5ec","task":"find-door","backend":"mujoco-mac"}
+{"ts":1776826691.063914,"event":"episode_end","episode_id":"f1fe4cd5ec","task":"find-door","backend":"mujoco-mac","success":true,"reward":0.2,"reason":"close: 0.29m","duration_s":201.038,"evidence":["rc=0","len=1917","task=find-door"]}
+{"ts":1776826694.104684,"event":"episode_start","episode_id":"0bb547ef01","task":"navigate-home","backend":"mujoco-mac"}
+{"ts":1776826739.458646,"event":"episode_end","episode_id":"0bb547ef01","task":"navigate-home","backend":"mujoco-mac","success":true,"reward":0.3,"reason":"close: 1.34m","duration_s":45.354,"evidence":["rc=0","len=453","task=navigate-home"]}
+{"ts":1776826742.498574,"event":"episode_start","episode_id":"4b6cff2139","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776826805.965865,"event":"episode_end","episode_id":"4b6cff2139","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.2,"reason":"err 23.1%, units_ok=True","duration_s":63.467,"evidence":["rc=0","len=524","task=read-gauge-N"]}
+{"ts":1776826817.1291761,"event":"episode_start","episode_id":"b735223892","task":"read-any-gauge","backend":"mujoco-mac"}
+{"ts":1776826850.255779,"event":"episode_end","episode_id":"b735223892","task":"read-any-gauge","backend":"mujoco-mac","success":false,"reward":-0.1,"reason":"E err 52.7% (too high)","duration_s":33.127,"evidence":["rc=0","len=577","task=read-any-gauge"]}
+{"ts":1776826863.9852018,"event":"episode_start","episode_id":"58007c8f08","task":"read-gauge-N","backend":"mujoco-mac"}
