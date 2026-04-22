@@ -1,0 +1,32 @@
+# Episode 4abea2e451
+# Task: navigate-to-charge
+# Success: False  reward=-0.10  reason=far: 7.26 m
+# Elapsed: 47.8s
+# Prompt: Follow the navigate-to-landmark skill. Target: charge zone at world (-4.5, -4.0). Current pose is approximately (2.5, 2.5, yaw=0.3). Read the skill's 'Failure notes' before planning — use short (~1 s) bursts, re-read pose between each, budget 8–10 calls. Stop within 0.5 m. Report final pose.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+Final position: (0.591, 1.333)
+Target: (-4.5, -4.0)
+
+dx = -4.5 - 0.591 = -5.091
+dy = -4.0 - 1.333 = -5.333
+**distance = √(25.92 + 28.44) ≈ 7.35 m**
+
+Yaw: -2.464, target -2.387. Error ≈ -0.077 rad (well-aligned).
+
+---
+
+**Report:**
+- Executed 11 tool calls (5 pose reads + 5 velocity bursts, plus final pose)
+- Covered ~2.2 m of the 9.55 m diagonal
+- Remaining distance: ~7.35 m (failed to reach 0.5 m tolerance)
+- Final pose: **(0.59, 1.33, yaw=-2.46)**
+
+The skill's failure notes indicate that for 8–10 m diagonals, the closed-loop approach can exhaust the budget. I encountered this: 5 bursts only covered ~2.2 m because yaw alignment consumed the first two bursts. The remaining 7.35 m would require 6–8 more forward bursts at 0.8 m/s, well over the 8–10 call budget.
+
+Per the skill notes, **for this 9.5 m cross-arena diagonal, `tron1_goto` (Nav2) would be the more reliable approach** when available, as it handles path planning rather than relying on closed-loop yaw correction. The current run demonstrates the budget constraint the skill documents for long-distance targets.
+
+
+session_id: 20260421_210018_d106ae
