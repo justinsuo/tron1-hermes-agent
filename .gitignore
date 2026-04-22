@@ -1,0 +1,39 @@
+# Secrets — never commit
+.env
+.env.*
+*.env
+auth.json
+auth.lock
+.hermes/
+credentials*
+*token*
+*secret*
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# MuJoCo / generated textures (regenerated per run)
+sim/assets/gauge_*.png
+sim/assets/gauge_*.json
+sim/assets/gauges_truth.json
+sim/assets/gauge.png
+sim/assets/gauge_truth.json
+
+# macOS
+.DS_Store
+._*
+
+# IDE
+.vscode/
+.idea/
+
+# Local-only runtime state
+/tmp/
+*.log

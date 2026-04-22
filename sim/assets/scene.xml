@@ -1,0 +1,170 @@
+<!-- Mac-native MuJoCo scene for Hermes-driven Tron 1 prototyping.
+     Industrial inspection room: 3 analog gauges on different walls,
+     a labeled door, several obstacles, and the actual WF_TRON1A mesh. -->
+<mujoco model="tron1_sim_room">
+  <compiler angle="radian" meshdir="/Users/justinsuo/tron1_ws/src/tron1-mujoco-sim/robot-description/pointfoot/WF_TRON1A/meshes/"/>
+  <option timestep="0.002" integrator="RK4" gravity="0 0 0"/>
+
+  <default>
+    <default class="visual">
+      <geom contype="0" conaffinity="0" group="1" type="mesh"/>
+    </default>
+    <default class="collision">
+      <geom contype="1" conaffinity="1" condim="3" group="0"/>
+    </default>
+  </default>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" width="256" height="256"
+             rgb1="0.7 0.85 1" rgb2="0.95 0.95 1"/>
+    <texture name="floor_tex" type="2d" builtin="checker" width="512" height="512"
+             rgb1="0.35 0.35 0.37" rgb2="0.55 0.55 0.6" mark="cross" markrgb="0.8 0.8 0.8"/>
+    <material name="floor_mat" texture="floor_tex" texrepeat="4 4" reflectance="0.1"/>
+
+    <texture name="wall_tex" type="2d" builtin="flat" width="256" height="256"
+             rgb1="0.85 0.82 0.78"/>
+    <material name="wall_mat" texture="wall_tex" reflectance="0.02"/>
+    <material name="brick_mat" rgba="0.55 0.25 0.2 1" reflectance="0.02"/>
+    <material name="panel_mat" rgba="0.15 0.18 0.23 1"/>
+    <material name="sign_mat"  rgba="0.95 0.75 0.1 1"/>
+
+    <!-- Gauges: three textures generated at runtime by sim.py. -->
+    <texture name="gauge_N_tex" type="2d" file="/Users/justinsuo/tron1-sim-mac/assets/gauge_N.png" width="512" height="512"/>
+    <texture name="gauge_E_tex" type="2d" file="/Users/justinsuo/tron1-sim-mac/assets/gauge_E.png" width="512" height="512"/>
+    <texture name="gauge_W_tex" type="2d" file="/Users/justinsuo/tron1-sim-mac/assets/gauge_W.png" width="512" height="512"/>
+    <material name="gauge_N_mat" texture="gauge_N_tex" texuniform="true" reflectance="0.08"/>
+    <material name="gauge_E_mat" texture="gauge_E_tex" texuniform="true" reflectance="0.08"/>
+    <material name="gauge_W_mat" texture="gauge_W_tex" texuniform="true" reflectance="0.08"/>
+
+    <material name="obstacle_mat" rgba="0.9 0.55 0.1 1"/>
+    <material name="cone_mat"     rgba="0.95 0.45 0.05 1"/>
+    <material name="door_mat"     rgba="0.35 0.22 0.15 1"/>
+
+    <!-- Tron 1 meshes -->
+    <material name="tron_body" rgba="0.79216 0.81961 0.93333 1"/>
+    <material name="tron_hip"  rgba="1 1 1 1"/>
+    <material name="tron_wheel" rgba="0.15 0.15 0.18 1"/>
+    <mesh name="base_Link"   file="base_Link.STL"/>
+    <mesh name="abad_L_Link" file="abad_L_Link.STL"/>
+    <mesh name="abad_R_Link" file="abad_R_Link.STL"/>
+    <mesh name="hip_L_Link"  file="hip_L_Link.STL"/>
+    <mesh name="hip_R_Link"  file="hip_R_Link.STL"/>
+    <mesh name="knee_L_Link" file="knee_L_Link.STL"/>
+    <mesh name="knee_R_Link" file="knee_R_Link.STL"/>
+    <mesh name="wheel_L_Link" file="wheel_L_Link.STL"/>
+    <mesh name="wheel_R_Link" file="wheel_R_Link.STL"/>
+  </asset>
+
+  <worldbody>
+    <!-- Industrial overhead lighting — 4 fixtures -->
+    <light pos="0  3 5"  dir="0 0 -1"  diffuse="1.0 1.0 0.95" ambient="0.35 0.35 0.35"/>
+    <light pos="0 -3 5"  dir="0 0 -1"  diffuse="0.9 0.9 0.85" ambient="0.2 0.2 0.2"/>
+    <light pos="4  0 5"  dir="-1 0 -1" diffuse="0.7 0.7 0.65"/>
+    <light pos="-4 0 5"  dir="1 0 -1"  diffuse="0.7 0.7 0.65"/>
+
+    <geom name="floor" type="plane" size="8 8 0.1" material="floor_mat" class="collision"/>
+
+    <!-- Room walls -->
+    <geom name="wall_n" type="box" pos="0  6 1.3" size="6 0.1 1.3" material="wall_mat" class="collision"/>
+    <geom name="wall_s" type="box" pos="0 -6 1.3" size="6 0.1 1.3" material="brick_mat" class="collision"/>
+    <geom name="wall_e" type="box" pos=" 6 0 1.3" size="0.1 6 1.3" material="wall_mat" class="collision"/>
+    <geom name="wall_w" type="box" pos="-6 0 1.3" size="0.1 6 1.3" material="wall_mat" class="collision"/>
+
+    <!-- NORTH gauge (the one the agent has been reading) -->
+    <body name="gauge_N" pos="0 5.85 0.7">
+      <geom name="gauge_N_face" type="plane" size="0.6 0.6 0.01"
+            xyaxes="1 0 0 0 0 1" material="gauge_N_mat" class="visual"/>
+    </body>
+    <!-- Decorative dark panel behind the gauge -->
+    <geom name="gauge_N_panel" type="box" pos="0 5.92 0.7" size="0.75 0.02 0.75"
+          material="panel_mat" class="visual"/>
+
+    <!-- EAST gauge: normal -X (faces robot interior). -->
+    <body name="gauge_E" pos="5.85 -1.5 0.7">
+      <geom name="gauge_E_face" type="plane" size="0.5 0.5 0.01"
+            xyaxes="0 -1 0 0 0 1" material="gauge_E_mat" class="visual"/>
+    </body>
+    <geom name="gauge_E_panel" type="box" pos="5.92 -1.5 0.7" size="0.02 0.65 0.65"
+          material="panel_mat" class="visual"/>
+
+    <!-- WEST gauge: normal +X (faces robot interior). -->
+    <body name="gauge_W" pos="-5.85 2.0 0.7">
+      <geom name="gauge_W_face" type="plane" size="0.5 0.5 0.01"
+            xyaxes="0 1 0 0 0 1" material="gauge_W_mat" class="visual"/>
+    </body>
+    <geom name="gauge_W_panel" type="box" pos="-5.92 2.0 0.7" size="0.02 0.65 0.65"
+          material="panel_mat" class="visual"/>
+
+    <!-- Door on east wall with a yellow sign strip -->
+    <geom name="door" type="box" pos="5.88 3.0 0.95" size="0.05 0.55 0.95" material="door_mat" class="visual"/>
+    <geom name="door_sign" type="box" pos="5.86 3.0 1.65" size="0.02 0.5 0.08" material="sign_mat" class="visual"/>
+
+    <!-- Obstacles -->
+    <geom name="box1" type="box" pos="-1.0  1.5 0.25" size="0.25 0.25 0.25" material="obstacle_mat" class="collision"/>
+    <geom name="box2" type="box" pos=" 2.0 -1.5 0.3"  size="0.3 0.3 0.3"    material="obstacle_mat" class="collision"/>
+    <geom name="cone1" type="box" pos="-2.5 -0.5 0.2" size="0.15 0.15 0.2"  material="cone_mat"     class="collision"/>
+    <geom name="box3" type="box" pos="3.0 2.0 0.2"    size="0.2 0.2 0.2"    material="obstacle_mat" class="collision"/>
+
+    <!-- Floor markers — useful visual landmarks / navigation targets -->
+    <geom name="zone_charge" type="cylinder" pos="-4.5 -4.0 0.01" size="0.5 0.005"
+          material="sign_mat" class="visual"/>
+    <geom name="zone_home" type="cylinder" pos="0 -4.0 0.01" size="0.35 0.005"
+          rgba="0.2 0.8 0.3 0.8" class="visual"/>
+
+    <!-- WF_TRON1A robot — mesh-only with articulated wheel joints for visual
+         rolling. Base has a free joint, wheels have hinge joints that sim.py
+         rotates at ω = v/r so they look like they're actually rolling. -->
+    <!-- Tron 1 robot. Body / limb offsets are IDENTICAL to the upstream
+         WF_TRON1A MJCF so the standing pose matches the real robot. Only
+         difference: joints on abad/hip/knee are removed (rigid) and the
+         wheel joints are kept as hinge joints so sim.py can spin the wheels
+         visually at ω=v/r while kinematic base control does the rest. -->
+    <body name="robot" pos="0 -4 0.92" euler="0 0 1.5708">
+      <freejoint name="robot_free"/>
+
+      <geom class="visual" mesh="base_Link" material="tron_body"/>
+      <geom name="robot_base_col" type="box" size="0.135 0.13 0.095"
+            pos="0.03 0 -0.072" class="collision" rgba="0 0 1 0"/>
+
+      <camera name="ego" pos="0.15 0 -0.05" xyaxes="0 -1 0 0 0 1" fovy="75"/>
+
+      <!-- Left leg chain: abad → hip → knee (offset back+down) → wheel (offset fwd+down) -->
+      <body pos="0.05556 0.105 -0.2602">
+        <geom class="visual" mesh="abad_L_Link" material="tron_body"/>
+        <body pos="-0.077 0.0205 0">
+          <geom class="visual" mesh="hip_L_Link" material="tron_hip"/>
+          <body pos="-0.15 -0.0205 -0.25981">
+            <geom class="visual" mesh="knee_L_Link" material="tron_body"/>
+            <body name="wheel_L_body" pos="0.15 0.0435 -0.25981">
+              <joint name="wheel_L_spin" type="hinge" axis="0 1 0"
+                     limited="false" damping="0" stiffness="0" armature="0"/>
+              <geom class="visual" mesh="wheel_L_Link" material="tron_wheel"/>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Right leg chain (mirrored across Y) -->
+      <body pos="0.05556 -0.105 -0.2602">
+        <geom class="visual" mesh="abad_R_Link" material="tron_body"/>
+        <body pos="-0.077 -0.0205 0">
+          <geom class="visual" mesh="hip_R_Link" material="tron_hip"/>
+          <body pos="-0.15 0.0205 -0.25981">
+            <geom class="visual" mesh="knee_R_Link" material="tron_body"/>
+            <body name="wheel_R_body" pos="0.15 -0.0435 -0.25981">
+              <joint name="wheel_R_spin" type="hinge" axis="0 1 0"
+                     limited="false" damping="0" stiffness="0" armature="0"/>
+              <geom class="visual" mesh="wheel_R_Link" material="tron_wheel"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <!-- Third-person camera: fixed corner perch, orientation auto-points at
+         the robot so it's always centered as it moves across the room. -->
+    <camera name="tp" mode="targetbody" target="robot" pos="3 -2 1.8" fovy="65"/>
+    <!-- Top-down camera for overview shots -->
+    <camera name="top" pos="0 0 9" xyaxes="1 0 0 0 1 0" fovy="60"/>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,10 @@
+# Episode f6fd6970f6
+# Task: find-door
+# Success: True  reward=0.55  reason=door dist 0.91m bearing +18°
+# Elapsed: 71.4s
+# Prompt: Follow the navigate-to-landmark skill. Target: door at world (5.0, 3.0), facing east (yaw ≈ 0). Current pose is (0, -4, yaw=π/2). Read the skill's 'Failure notes' before planning — use as many velocity bursts as needed (typically 6–10). Report final pose as your last message.
+
+=== TRANSCRIPT ===
+
+
+session_id: 20260421_182616_a0d2cc

@@ -1,0 +1,19 @@
+# Episode 8df554289e
+# Task: read-any-gauge
+# Success: False  reward=-0.20  reason=no gauge matches units '°C'
+# Elapsed: 154.1s
+# Prompt: There are 3 analog gauges in this room — NORTH at (0,5.85), EAST at (5.85,-1.5), WEST at (-5.85,2.0). Drive to any one of them and read it. Report JSON {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+Based on three captures from the north-wall gauge (robot at y≈4.66, 4.96, 4.96), the Qwen VL consistently reads the needle at ~15.5 on a 0–30 scale. Dial units were read as °C in the most detailed capture.
+
+{"value": 15.5, "units": "°C"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 42444.66it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 169001.26it/s]
+
+session_id: 20260421_183719_ee2656
