@@ -207,6 +207,10 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-any-gauge` failed with 55.2% E-error despite session transcribing VLM output: session ended with HF model-fetch progress bars and no recorded `qwen_vl_local` JSON reading in transcript, indicating HF fetch overhead consumed time budget before the actual inference call. Prioritize `tron1_get_image` → `qwen_vl_local` invocation within first 10s of session start (before any positioning or refinement loops) to ensure at least one JSON gauge reading lands in transcript even if later repositioning is abandoned due to budget exhaustion.
 
+- 2026-04-21 run `read-gauge-N` failed with 32.1% N-error (units_ok=True, single 32.0 °C reading): units validated but numeric error indicates needle snapped to a major tick (likely 30°C mark) despite apparent interpolated precision; session ended after model-fetch without multi-capture refinement loop. Single captures on °C dials with units_ok=True still require ≥2 materially-different-pose captures before return, and any whole-number or major-tick-aligned °C value (30.0, 32.0, etc) must trigger mandatory third capture ≥20 cm closer with explicit anti-snap prompt.
+
+- 2026-04-21 run `read-gauge-N` failed with 22.4% error (units_ok=True, 100.0 PSI): units validated but round value (100 PSI) snapped to major dial mark despite correct positioning at y≈4.65. HF model-fetch consumed most budget, leaving no refinement loop; never return a 100.0 PSI reading from single capture even at ideal pose—always mandate second capture ≥20 cm closer with explicit anti-snapping prompt before reporting any major-tick-aligned PSI value, prioritizing first-pass capture within 15s to leave budget for refinement.
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the
