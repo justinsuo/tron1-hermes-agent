@@ -113,6 +113,8 @@ final answer.
 - 2026-04-21 navigate-home task failed despite final pose reporting 0.41 m from target (within success tolerance) — success criterion may be more strict than displayed. Verify the exact success threshold with task/system output; if closed-loop reaches <0.5 m but still fails, the issue is likely measurement/frame mismatch rather than navigation logic.
 - 2026-04-21 navigate-to-charge failed with final distance 2.62 m remaining after 10 velocity calls on long diagonal (~9.5 m) from home → charge; sustained yaw correction for diagonal approach consumed budget faster than forward progress. For cross-arena targets >8 m, always prefer `tron1_goto` (Nav2) when available instead of closed-loop velocity.
 - 2026-04-21 navigate-home timed out with empty transcript (fifth timeout): if hermes times out on task entry, assume sidecar is unresponsive and fail immediately with diagnostic message rather than attempting any tool calls.
+- 2026-04-21 navigate-to-charge failed with final distance 11.72 m (far from home) after Nav2 (tron1_goto) reached a local waypoint and stopped short: Nav2 in the sidecar is unreliable for cross-arena targets >10 m; always fall back to closed-loop velocity with 10–12 budgeted calls for long diagonals, or detect Nav2 stall within 2–3 tool calls and switch immediately.
+- 2026-04-21 navigate-home task timed out with empty transcript on re-run: hermes timeout typically indicates the sidecar or tool infrastructure is hung/unresponsive before any output is produced. On timeout, check sidecar liveness with a quick probe (e.g. `tron1_ping` with timeout); if unresponsive, abort immediately rather than retrying the navigation command.
 
 ## Known good tunings (learned from self-play)
 

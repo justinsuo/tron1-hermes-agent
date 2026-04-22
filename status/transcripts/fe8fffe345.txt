@@ -1,0 +1,20 @@
+# Episode fe8fffe345
+# Task: navigate-to-charge
+# Success: False  reward=-0.10  reason=far: 11.72 m
+# Elapsed: 58.2s
+# Prompt: Follow the navigate-to-landmark skill. Target: charge zone at world (-4.5, -4.0). Current pose is approximately (2.5, 2.5, yaw=0.3). Read the skill's 'Failure notes' before planning — use short (~1 s) bursts, re-read pose between each, budget 8–10 calls. Stop within 0.5 m. Report final pose.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+Robot has stopped. Pose unchanged. Current position: (0.65, 6.53).
+Distance to charge (−4.5, −4.0): √[(−5.15)² + (−10.53)²] ≈ 11.72 m.
+
+**Navigation failed.** The closed-loop velocity approach encountered persistent northeast drift despite southwest target. After 8 velocity calls, I switched to Nav2 via `tron1_goto`, but Nav2 appears to have failed or reached a local waypoint and stopped short. The robot is 11.72 m away from the charge zone target, well outside the 0.5 m tolerance.
+
+**Final Pose:** x=0.65, y=6.53, yaw=2.20 rad
+**Distance from target:** 11.72 m
+**Status:** Failed — target not reached within 0.5 m tolerance.
+
+
+session_id: 20260421_191400_aaa3b3
