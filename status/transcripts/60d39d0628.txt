@@ -1,0 +1,30 @@
+# Episode 60d39d0628
+# Task: read-gauge-N
+# Success: True  reward=0.30  reason=marginal err 11.1%
+# Elapsed: 74.4s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+Perfect! I now have two readings both converged at 120 PSI with confidence 0.9 and units_ok=True. According to the skill, the second reading at y≈5.20 returned 0.0 PSI (zero-clamp bias) which is a contaminated capture that should be discarded. The first reading at y≈4.60 and this third reading at y≈4.91 both converged on 120 PSI.
+
+However, the skill notes warn about whole-number PSI readings being susceptible to snapping to major marks. But with two independent captures from slightly different positions (y≈4.60 and y≈4.91) both converging on the same value with good confidence, and having discarded the obviously bad reading (0.0 PSI), this gives reasonable confidence.
+
+Based on the skill guidance:
+- Reading 1 (y≈4.60): 120 PSI, conf 0.9, units PSI
+- Reading 2 (y≈5.20): 0.0 PSI (contaminated - zero-clamp bias, discarded)
+- Reading 3 (y≈4.91): 120 PSI, conf 0.9, units PSI
+
+Readings 1 and 3 agree on 120 PSI from two different poses. The final answer is:
+
+{"value": 120.0, "units": "PSI"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 180930.76it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 87880.66it/s]
+
+session_id: 20260421_215052_b28479
