@@ -1,34 +1,34 @@
 {
   "gauges": {
     "N": {
-      "value": 22.28,
-      "units": "V",
-      "min": 0.0,
-      "max": 30.0,
-      "needle_deg": 58.28,
-      "seed": 557114
-    },
-    "E": {
-      "value": 51.1,
+      "value": 10.57,
       "units": "\u00b0C",
       "min": -20.0,
       "max": 120.0,
-      "needle_deg": 1.88,
-      "seed": 567634
+      "needle_deg": -67.59,
+      "seed": 832860
+    },
+    "E": {
+      "value": 128.9,
+      "units": "PSI",
+      "min": 0.0,
+      "max": 200.0,
+      "needle_deg": 34.68,
+      "seed": 826420
     },
     "W": {
-      "value": 23.64,
-      "units": "V",
+      "value": 12.03,
+      "units": "BAR",
       "min": 0.0,
-      "max": 30.0,
-      "needle_deg": 69.09,
-      "seed": 526977
+      "max": 20.0,
+      "needle_deg": 24.36,
+      "seed": 802791
     }
   },
   "pose": {
-    "x": 2.5529570729703296e-15,
-    "y": 5.012230324745148,
+    "x": 2.5,
+    "y": 2.5,
     "z": 0.92,
-    "yaw": 1.5707963267948963
+    "yaw": 0.3
   }
 }
