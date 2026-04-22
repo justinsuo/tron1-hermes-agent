@@ -1,0 +1,19 @@
+# Episode d4c5ebbad3
+# Task: read-gauge-N
+# Success: False  reward=-0.20  reason=err 44.4%, units_ok=True
+# Elapsed: 114.8s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+Based on multiple captures (18 V, 15 V from well-framed poses; third was degraded), the voltmeter reads between these values. Taking an interpolated sub-integer value between the two reliable reads.
+
+{"value": 16.5, "units": "V"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 45680.54it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 65073.83it/s]
+
+session_id: 20260421_184304_ba83f1
