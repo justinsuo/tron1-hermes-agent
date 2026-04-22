@@ -1,8 +1,8 @@
 # Live Progress
 
-**Last updated**: 2026-04-21 19:01:41  
+**Last updated**: 2026-04-21 19:06:18  
 
-**Total episodes**: 134  
+**Total episodes**: 137  
 
 **Success rate (last 30)**: 47%
 
@@ -15,7 +15,7 @@
 | `navigate-forward-2m` | 1/1 | 100% | +1.00 |
 | `count-obstacles` | 15/16 | 94% | +0.71 |
 | `navigate-to-charge` | 9/18 | 50% | +0.25 |
-| `read-gauge-N` | 18/38 | 47% | +0.16 |
+| `read-gauge-N` | 20/41 | 49% | +0.17 |
 | `find-door` | 4/9 | 44% | +0.00 |
 | `read-any-gauge` | 11/31 | 35% | +0.15 |
 | `navigate-home` | 1/9 | 11% | -0.29 |
@@ -25,6 +25,9 @@
 
 | # | task | result | reward | reason |
 |---|---|---|---|---|
+| 137 | `read-gauge-N` | ✗ | -0.20 | err 543.7%, units_ok=False |
+| 136 | `read-gauge-N` | ✓ | +0.30 | marginal err 10.8% |
+| 135 | `read-gauge-N` | ✓ | +0.69 | err 6.1% on BAR |
 | 134 | `read-any-gauge` | ✓ | +0.60 | W err 6.0% |
 | 133 | `navigate-to-charge` | ✗ | -0.10 | far: 2.62 m |
 | 132 | `read-gauge-N` | ✗ | -0.20 | err 45.7%, units_ok=False |
@@ -37,6 +40,3 @@
 | 125 | `navigate-to-charge` | ✓ | +0.69 | within 0.31 m |
 | 124 | `read-gauge-N` | ✗ | -0.20 | err 44.4%, units_ok=True |
 | 123 | `read-any-gauge` | ✗ | -0.10 | N err 21.7% (too high) |
-| 122 | `read-any-gauge` | ✗ | -0.20 | no gauge matches units '°C' |
-| 121 | `read-gauge-N` | ✗ | -0.20 | err 15.2%, units_ok=True |
-| 120 | `describe-scene` | ✓ | +0.80 | 8 scene keywords matched |

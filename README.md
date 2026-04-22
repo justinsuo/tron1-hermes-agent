@@ -10,12 +10,12 @@
 
 ## Live progress
 
-*Auto-updated every ~10 minutes. Last sync: **2026-04-21 19:01:41**.*
+*Auto-updated every ~10 minutes. Last sync: **2026-04-21 19:06:18**.*
 
-**134 total episodes · 47% success on the last 30**
+**137 total episodes · 47% success on the last 30**
 
-**pose** `(+0.00, +5.22, yaw=+1.57)`  
-**gauges** N=10.28 BAR · E=22.04 V · W=32.64 °C
+**pose** `(+0.03, +5.33, yaw=+1.67)`  
+**gauges** N=14.27 BAR · E=13.43 V · W=3.84 V
 
 ### Per-task breakdown
 
@@ -25,7 +25,7 @@
 | `navigate-forward-2m` | 1/1 | **100%** | +1.00 |
 | `count-obstacles` | 15/16 | **94%** | +0.71 |
 | `navigate-to-charge` | 9/18 | **50%** | +0.25 |
-| `read-gauge-N` | 18/38 | **47%** | +0.16 |
+| `read-gauge-N` | 20/41 | **49%** | +0.17 |
 | `find-door` | 4/9 | **44%** | +0.00 |
 | `read-any-gauge` | 11/31 | **36%** | +0.15 |
 | `navigate-home` | 1/9 | **11%** | -0.29 |
@@ -58,18 +58,21 @@ A complete, working Mac-native robotics agent stack:
 
 ## Run it yourself
 
+The easiest way: **build the clickable Mac app** (one-time), then double-click it forever after.
+
 ```bash
-# One-command bring-up (sim + dashboard)
-./scripts/start_all.sh
-
-# With the MuJoCo native viewer
-./scripts/start_all.sh viewer
-
-# With self-play running too
-./scripts/start_all.sh selfplay 20
+bash scripts/build_app.sh
 ```
 
-Then open **http://127.0.0.1:5557/** in a browser.
+That drops `Tron 1.app` in `~/Applications/` (with a custom icon generated from a sim render), plus a Desktop alias. Double-click Tron 1 on your Desktop — it silently brings up sim + dashboard + GitHub auto-push, then opens the browser dashboard at **http://127.0.0.1:5557/** with a Control Panel (start/stop/restart every component).
+
+Command-line alternatives if you prefer:
+
+```bash
+./scripts/start_all.sh                    # sim + dashboard
+./scripts/start_all.sh viewer             # + the MuJoCo native 3D window
+./scripts/start_all.sh selfplay 20        # + 20 self-play episodes
+```
 
 Full setup notes in [`DELIVERY.md`](DELIVERY.md).
 

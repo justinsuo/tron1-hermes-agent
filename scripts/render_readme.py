@@ -111,18 +111,21 @@ A complete, working Mac-native robotics agent stack:
 
 ## Run it yourself
 
+The easiest way: **build the clickable Mac app** (one-time), then double-click it forever after.
+
 ```bash
-# One-command bring-up (sim + dashboard)
-./scripts/start_all.sh
-
-# With the MuJoCo native viewer
-./scripts/start_all.sh viewer
-
-# With self-play running too
-./scripts/start_all.sh selfplay 20
+bash scripts/build_app.sh
 ```
 
-Then open **http://127.0.0.1:5557/** in a browser.
+That drops `Tron 1.app` in `~/Applications/` (with a custom icon generated from a sim render), plus a Desktop alias. Double-click Tron 1 on your Desktop — it silently brings up sim + dashboard + GitHub auto-push, then opens the browser dashboard at **http://127.0.0.1:5557/** with a Control Panel (start/stop/restart every component).
+
+Command-line alternatives if you prefer:
+
+```bash
+./scripts/start_all.sh                    # sim + dashboard
+./scripts/start_all.sh viewer             # + the MuJoCo native 3D window
+./scripts/start_all.sh selfplay 20        # + 20 self-play episodes
+```
 
 Full setup notes in [`DELIVERY.md`](DELIVERY.md).
 
