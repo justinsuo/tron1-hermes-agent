@@ -1,0 +1,23 @@
+# Episode 02a35111e6
+# Task: read-gauge-N
+# Success: True  reward=0.86  reason=err 2.8% on °C
+# Elapsed: 63.5s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+Both readings consistently show 64°C with confidence 0.9. Per the skill notes, whole-number readings on a °C dial can indicate VLM snap-to-major-tick behavior. However, given that both independent captures from slightly different positions (y=4.644 and y=4.634) both strongly converge on exactly 64°C, and the skill notes indicate that "two-pose convergence" on a consistent value increases confidence, I'll report this reading.
+
+The gauge reading on the NORTH wall (at world y=+5.85, robot positioned at y≈4.64) is:
+
+{"value": 64.0, "units": "°C"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 55924.05it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 52668.20it/s]
+
+session_id: 20260421_192620_e1e7ab
