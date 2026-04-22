@@ -115,6 +115,8 @@ final answer.
 - 2026-04-21 navigate-home timed out with empty transcript (fifth timeout): if hermes times out on task entry, assume sidecar is unresponsive and fail immediately with diagnostic message rather than attempting any tool calls.
 - 2026-04-21 navigate-to-charge failed with final distance 11.72 m (far from home) after Nav2 (tron1_goto) reached a local waypoint and stopped short: Nav2 in the sidecar is unreliable for cross-arena targets >10 m; always fall back to closed-loop velocity with 10–12 budgeted calls for long diagonals, or detect Nav2 stall within 2–3 tool calls and switch immediately.
 - 2026-04-21 navigate-home task timed out with empty transcript on re-run: hermes timeout typically indicates the sidecar or tool infrastructure is hung/unresponsive before any output is produced. On timeout, check sidecar liveness with a quick probe (e.g. `tron1_ping` with timeout); if unresponsive, abort immediately rather than retrying the navigation command.
+- 2026-04-21 navigate-home timed out (sixth) with empty transcript: repeated hermes wall-clock timeouts on the same task indicate blocking/deadlock in tool initialization, not navigation logic itself. Emit diagnostic output (e.g., \"sidecar unresponsive, aborting\") before issuing any tool calls to ensure user sees failure reason even if hermes times out mid-turn.
+- 2026-04-21 navigate-home timed out (empty transcript): on hermes timeout during skill execution, include a fast initial diagnostic check (e.g., `tron1_ping` with 2–3 s timeout) as the very first tool call to confirm sidecar responsiveness before attempting full navigation, reducing timeout delay caused by hanging pose-reads or unresponsive infrastructure.
 
 ## Known good tunings (learned from self-play)
 
