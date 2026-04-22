@@ -1,0 +1,30 @@
+# Episode 1b54940282
+# Task: navigate-to-charge
+# Success: False  reward=-0.10  reason=far: 2.62 m
+# Elapsed: 58.0s
+# Prompt: Follow the navigate-to-landmark skill. Target: charge zone at world (-4.5, -4.0). Current pose is approximately (2.5, 2.5, yaw=0.3). Read the skill's 'Failure notes' before planning — use short (~1 s) bursts, re-read pose between each, budget 8–10 calls. Stop within 0.5 m. Report final pose.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+Moved another ~0.8 m. Recompute final distance:
+- dx = −4.5 − (−2.948) = −1.552
+- dy = −4.0 − (−1.710) = −2.290
+- dist = sqrt(2.41 + 5.24) = sqrt(7.65) ≈ 2.77 m
+
+Still ~2.8 m out; issued 10 calls. Per failure notes, stopping here as budget is reached.
+
+---
+
+**Final pose report:**
+
+x: −2.9475
+y: −1.7099
+yaw: −2.4837 rad
+
+Distance from charge zone (−4.5, −4.0): 2.77 m
+
+Navigation completed within 10 velocity calls but fell short of the 0.5 m target. The sustained yaw correction needed for a long diagonal approach (~9.5 m) and overshooting on the initial turn burst consumed budget. Per skill notes, for such long cross-arena distances, `tron1_goto` (Nav2) is more reliable when available.
+
+
+session_id: 20260421_185938_e9e14c

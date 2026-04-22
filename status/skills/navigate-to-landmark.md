@@ -111,6 +111,7 @@ final answer.
 - 2026-04-21 navigate-to-charge failed with 10.15 m remaining after 8–9 velocity calls spent on yaw alignment. Lesson: commit to ONE confident, longer turn burst (≥1.5–2.0 s at full angular) for coarse alignment before switching to forward motion; avoid fine-tuning yaw across multiple short bursts.
 - 2026-04-21 navigate-to-charge failed with 15.99 m remaining (9/10 calls used) — persistent northeast drift despite southwest target indicates heading misalignment or simulation frame issue. For long-distance cross-arena targets (>8 m), prefer `tron1_goto` (Nav2) when available; if using closed-loop velocity, detect consistent drift direction within 2–3 calls and abort to Nav2 rather than exhaust budget chasing yaw correction.
 - 2026-04-21 navigate-home task failed despite final pose reporting 0.41 m from target (within success tolerance) — success criterion may be more strict than displayed. Verify the exact success threshold with task/system output; if closed-loop reaches <0.5 m but still fails, the issue is likely measurement/frame mismatch rather than navigation logic.
+- 2026-04-21 navigate-to-charge failed with final distance 2.62 m remaining after 10 velocity calls on long diagonal (~9.5 m) from home → charge; sustained yaw correction for diagonal approach consumed budget faster than forward progress. For cross-arena targets >8 m, always prefer `tron1_goto` (Nav2) when available instead of closed-loop velocity.
 
 ## Known good tunings (learned from self-play)
 
