@@ -130,6 +130,8 @@ final answer.
 - 2026-04-21 navigate-home timed out (hermes wall-clock timeout, empty transcript): sidecar is unresponsive or initialization is hung; emit diagnostic text immediately before any tool calls to surface failure reason to user even if hermes times out mid-turn.
 - 2026-04-21 navigate-to-charge failed at 3.97 m after diagonal approach with 2× long turn bursts + 4× forward bursts exhausted budget faster than expected: For cross-arena targets >8 m, budget 14–16 velocity calls for diagonal multi-burst sequences; detect persistent drift by call 3–4 and escalate to `tron1_goto` (Nav2) rather than continuing loop.
 - 2026-04-21 navigate-to-charge failed with 7.26 m remaining on 9.5 m diagonal after ~8–10 calls hitting yaw-correction bottleneck: For cross-arena targets >9 m, always use `tron1_goto` (Nav2) when available instead of closed-loop velocity; Nav2 handles path planning and avoids repeated yaw-correction bursts that exhaust budget before reaching target.
+- 2026-04-21 navigate-home timed out with empty transcript (hermes wall-clock): repeated hermes timeouts on task entry indicate tool/sidecar initialization hang before any output. Emit diagnostic text immediately as first response (before any tool calls) to surface failure reason to user even if hermes times out.
+- 2026-04-21 navigate-to-charge failed with 3.59 m final distance remaining after 10 velocity calls: For cross-arena targets >9 m on diagonal approach, the 10-call velocity budget hits the yaw-correction bottleneck before reaching target. Prefer `tron1_goto` (Nav2) when available instead of closed-loop velocity.
 
 ## Known good tunings (learned from self-play)
 
