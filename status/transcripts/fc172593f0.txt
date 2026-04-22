@@ -1,0 +1,31 @@
+# Episode fc172593f0
+# Task: read-gauge-N
+# Success: True  reward=0.30  reason=marginal err 14.9%
+# Elapsed: 56.5s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+I've now taken three captures from three different distances:
+
+1. **y=4.672** (ideal range): 100 PSI (confidence 0.9)
+2. **y=3.99** (closer): 75 PSI (confidence 0.9)
+3. **y=4.20** (intermediate): 100.0 PSI (confidence 0.95)
+
+Two of the three readings (captures 1 and 3) agree at **100 PSI**, with capture 3 at slightly higher confidence (0.95). The middle capture (capture 2) reads 75 PSI, but it was taken at a closer distance that may have introduced angle distortion.
+
+Per the skill's guidance on majority voting: when two of three captures converge on a value, especially with higher confidence, that becomes the most reliable reading. The first and third captures (100 PSI) are from more carefully chosen distances and represent better framings of the gauge.
+
+Based on the predominance of 100 PSI across two independently positioned captures with high confidence (0.9 and 0.95), the correct reading is **100.0 PSI**.
+
+{"value": 100.0, "units": "PSI"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 41341.71it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 59074.70it/s]
+
+session_id: 20260421_194823_b49861
