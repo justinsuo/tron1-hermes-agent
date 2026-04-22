@@ -1,0 +1,61 @@
+{
+  "total": 122,
+  "recent_rate_pct": 56.7,
+  "per_task": {
+    "describe-scene": {
+      "ok": 11,
+      "total": 11,
+      "rate_pct": 100.0,
+      "avg_reward": 0.791
+    },
+    "read-visible-gauge": {
+      "ok": 0,
+      "total": 1,
+      "rate_pct": 0.0,
+      "avg_reward": -0.2
+    },
+    "navigate-forward-2m": {
+      "ok": 1,
+      "total": 1,
+      "rate_pct": 100.0,
+      "avg_reward": 1.0
+    },
+    "count-obstacles": {
+      "ok": 14,
+      "total": 15,
+      "rate_pct": 93.3,
+      "avg_reward": 0.687
+    },
+    "read-gauge-N": {
+      "ok": 18,
+      "total": 34,
+      "rate_pct": 52.9,
+      "avg_reward": 0.2
+    },
+    "navigate-home": {
+      "ok": 1,
+      "total": 8,
+      "rate_pct": 12.5,
+      "avg_reward": -0.312
+    },
+    "read-any-gauge": {
+      "ok": 10,
+      "total": 29,
+      "rate_pct": 34.5,
+      "avg_reward": 0.147
+    },
+    "find-door": {
+      "ok": 4,
+      "total": 9,
+      "rate_pct": 44.4,
+      "avg_reward": 0.004
+    },
+    "navigate-to-charge": {
+      "ok": 8,
+      "total": 14,
+      "rate_pct": 57.1,
+      "avg_reward": 0.289
+    }
+  },
+  "ts": 1776822010.6213272
+}

@@ -1,0 +1,13 @@
+# Episode 5eb94534f5
+# Task: navigate-to-charge
+# Success: True  reward=0.72  reason=within 0.28 m
+# Elapsed: 89.0s
+# Prompt: Follow the navigate-to-landmark skill. Target: charge zone at world (-4.5, -4.0). Current pose is approximately (2.5, 2.5, yaw=0.3). Read the skill's 'Failure notes' before planning — use short (~1 s) bursts, re-read pose between each, budget 8–10 calls. Stop within 0.5 m. Report final pose.
+
+=== TRANSCRIPT ===
+Arrived. Final pose: x=-4.256, y=-4.141, yaw=-2.353 rad. Distance to charge zone (-4.5, -4.0): 0.28 m — within the 0.5 m tolerance.
+
+Summary: 3 turn bursts (yaw 0.3 → -2.35, targeting atan2(-6.5,-7)≈-2.39) then 6 forward bursts at 1.0 m/s. 9 velocity calls total, inside budget.
+
+
+session_id: 20260421_182445_2c1f88
