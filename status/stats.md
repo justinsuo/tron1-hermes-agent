@@ -1,10 +1,10 @@
 # Live Progress
 
-**Last updated**: 2026-04-21 19:00:30  
+**Last updated**: 2026-04-21 19:01:41  
 
-**Total episodes**: 133  
+**Total episodes**: 134  
 
-**Success rate (last 30)**: 43%
+**Success rate (last 30)**: 47%
 
 
 ## Per-task
@@ -17,7 +17,7 @@
 | `navigate-to-charge` | 9/18 | 50% | +0.25 |
 | `read-gauge-N` | 18/38 | 47% | +0.16 |
 | `find-door` | 4/9 | 44% | +0.00 |
-| `read-any-gauge` | 10/30 | 33% | +0.14 |
+| `read-any-gauge` | 11/31 | 35% | +0.15 |
 | `navigate-home` | 1/9 | 11% | -0.29 |
 | `read-visible-gauge` | 0/1 | 0% | -0.20 |
 
@@ -25,6 +25,7 @@
 
 | # | task | result | reward | reason |
 |---|---|---|---|---|
+| 134 | `read-any-gauge` | ✓ | +0.60 | W err 6.0% |
 | 133 | `navigate-to-charge` | ✗ | -0.10 | far: 2.62 m |
 | 132 | `read-gauge-N` | ✗ | -0.20 | err 45.7%, units_ok=False |
 | 131 | `navigate-home` | ✗ | -0.10 | far from home: 4.14m |
@@ -39,4 +40,3 @@
 | 122 | `read-any-gauge` | ✗ | -0.20 | no gauge matches units '°C' |
 | 121 | `read-gauge-N` | ✗ | -0.20 | err 15.2%, units_ok=True |
 | 120 | `describe-scene` | ✓ | +0.80 | 8 scene keywords matched |
-| 119 | `navigate-to-charge` | ✓ | +0.83 | within 0.17 m |

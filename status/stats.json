@@ -1,6 +1,6 @@
 {
-  "total": 133,
-  "recent_rate_pct": 43.3,
+  "total": 134,
+  "recent_rate_pct": 46.7,
   "per_task": {
     "describe-scene": {
       "ok": 11,
@@ -39,10 +39,10 @@
       "avg_reward": -0.289
     },
     "read-any-gauge": {
-      "ok": 10,
-      "total": 30,
-      "rate_pct": 33.3,
-      "avg_reward": 0.139
+      "ok": 11,
+      "total": 31,
+      "rate_pct": 35.5,
+      "avg_reward": 0.153
     },
     "find-door": {
       "ok": 4,
@@ -57,5 +57,5 @@
       "avg_reward": 0.247
     }
   },
-  "ts": 1776823230.199965
+  "ts": 1776823301.657299
 }
