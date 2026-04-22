@@ -1,8 +1,8 @@
 # Live Progress
 
-**Last updated**: 2026-04-21 19:51:51  
+**Last updated**: 2026-04-21 19:53:45  
 
-**Total episodes**: 169  
+**Total episodes**: 170  
 
 **Success rate (last 30)**: 33%
 
@@ -13,7 +13,7 @@
 |---|---|---|---|
 | `describe-scene` | 12/12 | 100% | +0.79 |
 | `navigate-forward-2m` | 1/1 | 100% | +1.00 |
-| `count-obstacles` | 16/19 | 84% | +0.63 |
+| `count-obstacles` | 17/20 | 85% | +0.65 |
 | `find-door` | 8/13 | 62% | +0.06 |
 | `navigate-to-charge` | 9/19 | 47% | +0.23 |
 | `read-gauge-N` | 23/52 | 44% | +0.14 |
@@ -25,6 +25,7 @@
 
 | # | task | result | reward | reason |
 |---|---|---|---|---|
+| 170 | `count-obstacles` | ✓ | +1.00 | correct count = 4 |
 | 169 | `navigate-home` | ✗ | -0.10 | far from home: 6.89m |
 | 168 | `find-door` | ✓ | +0.20 | close: 1.50m |
 | 167 | `read-any-gauge` | ✗ | -0.20 | no gauge matches units 'unspecified' |
@@ -39,4 +40,3 @@
 | 158 | `read-gauge-N` | ✗ | -0.20 | err 21.5%, units_ok=True |
 | 157 | `read-gauge-N` | ✗ | -0.20 | err 27.3%, units_ok=True |
 | 156 | `navigate-home` | ✗ | -0.50 | hermes timed out |
-| 155 | `navigate-home` | ✗ | -0.50 | hermes timed out |
