@@ -55,3 +55,4 @@ and fine obstacle recognition; switch by setting
 
 - Obstacle counts may be overestimated by the 3B model; use 7B variant or manual verification for precise counts in count-obstacles tasks.
 - When counting obstacles, the 3B Qwen VL model tends to count 75–100% too high (pred 7 vs actual 4); always request 7B variant or implement post-hoc deduplication logic for fragmented box detections.
+- Pred 6 vs actual 4 obstacles: 3B model still overestimating by ~50%; enforce 7B model or add consensus filtering (multiple angles + voting) for critical counting tasks.

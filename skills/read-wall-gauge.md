@@ -174,7 +174,15 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-gauge-N` failed with 25.7% error (units_ok=True, 10.5 BAR): two captures agreed at 10 and 10.5 BAR but final reading was still wrong, proving that half-integer convergence on low-range BAR dials is an unreliable anchor. Mandatory: when two captures converge on a low-range half-integer BAR value (≤20% of dial scale), discard both and take a fresh third capture ≥25 cm closer with prompt forcing 0.1 BAR interpolation before returning any value.
 
-- 2026-04-21 run `read-any-gauge` failed with "no gauge matches units 'degrees'": returned {value: 12, units: "degrees"} but task validation rejected non-standard unit strings; VLM hallucinated "degrees" when it could not legibly read the dial's actual unit labels. Always re-capture ≥20 cm closer if units field is non-standard (anything other than BAR, PSI, °C, V, W, percent, etc) and explicitly prompt VLM to name visible unit text before reporting.
+- 2026-04-21 run `read-any-gauge` failed with \"no gauge matches units 'degrees'\": returned {value: 12, units: \"degrees\"} but task validation rejected non-standard unit strings; VLM hallucinated \"degrees\" when it could not legibly read the dial's actual unit labels. Always re-capture ≥20 cm closer if units field is non-standard (anything other than BAR, PSI, °C, V, W, percent, etc) and explicitly prompt VLM to name visible unit text before reporting.
+
+- 2026-04-21 run `read-gauge-N` timeout failure (no JSON reading in transcript): HF model-fetch progress consumed the entire session budget before any `qwen_vl_local` call completed. Invoke `tron1_get_image` → `qwen_vl_local` within first 15s of session (from current pose, no positioning refinement) so at least one JSON reading lands in the transcript before budget exhaustion.
+
+- 2026-04-21 run `read-gauge-N` failed with 46.0% error (units_ok=True): units validation alone does not guarantee value correctness—the returned JSON had correct units but wrong needle position, indicating VLM snapped to a major tick despite apparently confident reading. When units_ok=True but error magnitude is high (≥40%), always take a mandatory third capture ≥25 cm closer with explicit anti-snapping prompt (e.g., \\\\\\\"interpolate between labeled ticks, never snap to major marks\\\\\\\") before reporting, regardless of prior-pose consensus or confidence scores.
+
+- 2026-04-21 run `read-any-gauge` failed with \\\\\\\"no gauge matches units 'PSI'\\\\\\\": VLM correctly identified the units but task validation failed on the capitalization/format; always ensure `qwen_vl_local` units output matches expected canonical form (PSI, BAR, °C, V, W) and normalize non-standard variants before returning.
+
+- 2026-04-21 run `read-any-gauge` failed with 11.8% N-error: reading was captured and validated (units_ok=True, confidence≥0.9) but absolute value error persisted after proper positioning and multi-capture consensus, indicating ambient VLM needle-interpolation noise rather than procedural fault—accept ≤15% error on well-positioned, multi-confirmed gauge readings as inherent VLM precision ceiling.
 
 ## Self-improvement hook
 

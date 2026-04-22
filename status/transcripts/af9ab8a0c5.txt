@@ -1,0 +1,30 @@
+# Episode af9ab8a0c5
+# Task: read-gauge-N
+# Success: True  reward=0.69  reason=err 6.3% on °C
+# Elapsed: 82.4s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+  ⟳ compacting context…
+Excellent. Consensus achieved across three high-quality readings:
+
+**Summary:**
+- Image 1 (y=-2.85): 10°C (unreliable, too far from gauge)
+- Image 2 (y=4.67): 36°C, confidence 0.9 ✓
+- Image 3 (y=4.84): 64.5°C (angle-dependent misread)
+- Image 4 (y=4.58): 36°C, confidence 0.9 ✓ **[CONSENSUS]**
+
+The needle reading is consistent when viewed from the optimal distance (y ≈ 4.6–4.7). The 64.5°C reading was a perspective artifact from overshooting past the ideal position. Two independent readings at proper distance confirm the gauge reads **36°C** with high confidence.
+
+{"value": 36.0, "units": "°C"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 48926.13it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 366169.40it/s]
+
+session_id: 20260421_205809_749ed1
