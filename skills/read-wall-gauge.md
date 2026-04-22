@@ -211,6 +211,9 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-gauge-N` failed with 22.4% error (units_ok=True, 100.0 PSI): units validated but round value (100 PSI) snapped to major dial mark despite correct positioning at y≈4.65. HF model-fetch consumed most budget, leaving no refinement loop; never return a 100.0 PSI reading from single capture even at ideal pose—always mandate second capture ≥20 cm closer with explicit anti-snapping prompt before reporting any major-tick-aligned PSI value, prioritizing first-pass capture within 15s to leave budget for refinement.
 
+- 2026-04-21 run `read-any-gauge` failed with 11.9% E-error: reading converged at 14.0 BAR (a whole-number major tick) from the heuristic y≈4.65 positioning pose with high reported confidence, but still carried measurable error—whole-number convergence at ideal poses remains unreliable; always mandate a third capture ≥20 cm closer with explicit 0.1 BAR anti-snapping prompt before reporting any whole-number BAR reading, even when units_ok=True and prior poses show agreement.
+- 2026-04-21 run `read-any-gauge` failed with 71.1% E-error: units_ok=True + high confidence (≥0.9) on converged multi-pose readings are NOT sufficient validators of correctness—massive magnitude errors can coexist with correct unit identification and reported precision. When error exceeds 50%, immediately verify that scale unit text (not inferred context) is legible in at least one capture AND that the gauge type matches the task; if either validation fails, discard all readings and re-capture ≥25 cm closer with explicit unit-label-text prompt before any re-report.
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the

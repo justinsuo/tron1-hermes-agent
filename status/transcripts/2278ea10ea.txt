@@ -1,0 +1,12 @@
+# Episode 2278ea10ea
+# Task: find-door
+# Success: True  reward=0.59  reason=door dist 0.82m bearing +9°
+# Elapsed: 84.1s
+# Prompt: Follow the navigate-to-landmark skill. Target: door at world (5.0, 3.0), facing east (yaw ≈ 0). Current pose is (0, -4, yaw=π/2). Read the skill's 'Failure notes' before planning — use as many velocity bursts as needed (typically 6–10). Report final pose as your last message.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+
+
+session_id: 20260421_213906_902e78
