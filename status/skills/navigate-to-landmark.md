@@ -137,6 +137,8 @@ final answer.
 - 2026-04-21 navigate-home timed out (eighth occurrence, empty transcript): hermes wall-clock timeout with no output before completion indicates sidecar/tool infrastructure hung before first tool call. Emit diagnostic text immediately upon task entry, then fail fast without attempting tool calls to prevent blocking on unresponsive infrastructure.
 - 2026-04-21 navigate-to-charge failed at 11.85 m final distance after 10 velocity calls on 9.5 m diagonal with large initial yaw error: For long diagonals (≥9 m) with significant heading misalignment, prefer `tron1_goto` (Nav2) when available instead of closed-loop velocity—closed-loop yaw correction becomes a bottleneck and exhausts budget before reaching target.
 - 2026-04-21 navigate-to-charge final attempt stopped at 4.20 m remaining after ~8 forward bursts at 0.8 m/s couldn't close final 4+ m on long diagonal (~9.5 m): **Always prefer `tron1_goto` (Nav2) for cross-arena targets >8 m instead of closed-loop velocity.** Closed-loop doesn't have sufficient budget or acceleration profile to reach distant targets on diagonals.
+- 2026-04-21 navigate-home timed out (ninth occurrence, empty transcript on re-run): hermes wall-clock timeout with no output means sidecar initialization is hung/unresponsive before the first tool call completes. On future task entry with this pattern, emit diagnostic text immediately (no tool calls) to surface failure reason to user.
+- 2026-04-21 navigate-to-charge failed with 11.89 m remaining after 10 velocity calls on 9.5 m diagonal: Cross-arena targets >9 m with large initial yaw error exhaust closed-loop velocity budget on angular correction alone; use `tron1_goto` (Nav2) instead.
 
 ## Known good tunings (learned from self-play)
 
