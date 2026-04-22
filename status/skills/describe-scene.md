@@ -50,3 +50,7 @@ On the 3B 4-bit Qwen 2.5 VL model with a 480p frame, expect ~1.5–4 s per call
 on M-series Mac. The 7B variant is ~2× slower but noticeably better at OCR
 and fine obstacle recognition; switch by setting
 `HERMES_QWEN_VL_SIZE=7b` in the shell environment.
+
+## Lessons
+
+- Obstacle counts may be overestimated by the 3B model; use 7B variant or manual verification for precise counts in count-obstacles tasks.
