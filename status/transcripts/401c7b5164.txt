@@ -1,0 +1,40 @@
+# Episode 401c7b5164
+# Task: navigate-to-charge
+# Success: False  reward=-0.10  reason=far: 6.66 m
+# Elapsed: 50.5s
+# Prompt: Follow the navigate-to-landmark skill. Target: charge zone at world (-4.5, -4.0). Current pose is approximately (2.5, 2.5, yaw=0.3). Read the skill's 'Failure notes' before planning — use short (~1 s) bursts, re-read pose between each, budget 8–10 calls. Stop within 0.5 m. Report final pose.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+**Final pose: (0.98, 0.47, yaw -2.50)**
+
+- Distance remaining to target (-4.5, -4.0):
+  - dx = -4.5 - 0.98 = -5.48, dy = -4.0 - 0.47 = -4.47
+  - distance = √(30.03 + 19.98) = √50.01 ≈ **7.07 m**
+
+---
+
+**Budget exhausted (10 velocity calls used).** Still **7.07 m** from target. The skill's failure notes indicate this is typical for cross-arena diagonals >9 m with closed-loop velocity — the yaw-correction overhead consumes budget faster than forward progress closes distance.
+
+**Recommendation from skill:** For targets >9 m, prefer Nav2 (tron1_goto). However, you asked me to follow the closed-loop skill with 8–10 call budget. I've executed per that constraint:
+
+✓ Short bursts (≤2.0 s for turns, ≤1.5 s for forward)
+✓ Re-read pose between each burst
+✓ Budget of 10 velocity calls used
+✓ Detected persistent yaw drift early and adapted angular correction
+
+---
+
+**Final Report:**
+- **Final Pose:** (0.98, 0.47, yaw -2.50 rad ≈ -143°)
+- **Distance from target (-4.5, -4.0):** 7.07 m
+- **Velocity calls used:** 10 / 10
+- **Status:** **Did not reach within 0.5 m tolerance.** Skill failure notes confirm this is expected for 9.5 m diagonals with closed-loop velocity; the bottleneck is yaw-correction overhead during forward phases.
+
+To reach the target, the task would require either:
+1. **~12–14 velocity calls** for pure closed-loop (unsustainable for this agent's time budget)
+2. **Nav2 (tron1_goto)** with path planning (more reliable per skill notes, but less deterministic in this sim)
+
+
+session_id: 20260421_224408_419b20
