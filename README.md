@@ -10,25 +10,25 @@
 
 ## Live progress
 
-*Auto-updated every ~10 minutes. Last sync: **2026-04-21 20:01:52**.*
+*Auto-updated every ~10 minutes. Last sync: **2026-04-21 20:11:54**.*
 
-**175 total episodes · 40% success on the last 30**
+**185 total episodes · 43% success on the last 30**
 
-**pose** `(+0.00, +6.73, yaw=+1.57)`  
-**gauges** N=85.08 PSI · E=25.39 V · W=6.54 BAR
+**pose** `(+0.00, -4.00, yaw=+1.57)`  
+**gauges** N=12.35 V · E=-2.59 °C · W=10.70 V
 
 ### Per-task breakdown
 
 | task | ✓ / total | success % | avg reward |
 |---|---|---|---|
-| `describe-scene` | 12/12 | **100%** | +0.79 |
+| `describe-scene` | 13/13 | **100%** | +0.79 |
 | `navigate-forward-2m` | 1/1 | **100%** | +1.00 |
-| `count-obstacles` | 17/20 | **85%** | +0.65 |
+| `count-obstacles` | 18/21 | **86%** | +0.63 |
 | `find-door` | 9/14 | **64%** | +0.07 |
 | `navigate-to-charge` | 9/19 | **47%** | +0.23 |
-| `read-gauge-N` | 23/54 | **43%** | +0.12 |
-| `read-any-gauge` | 13/39 | **33%** | +0.15 |
-| `navigate-home` | 2/15 | **13%** | -0.29 |
+| `read-gauge-N` | 25/57 | **44%** | +0.13 |
+| `read-any-gauge` | 13/43 | **30%** | +0.12 |
+| `navigate-home` | 2/16 | **12%** | -0.31 |
 | `read-visible-gauge` | 0/1 | **0%** | -0.20 |
 
 See [`status/stats.md`](status/stats.md) for the full episode log and

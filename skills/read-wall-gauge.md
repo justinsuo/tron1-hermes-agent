@@ -148,6 +148,16 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-any-gauge` failed with 52.7% error: High error rates after `qwen_vl_local` calls with JSON output suggests VLM unit/scale confusion or needle snapping to nearest major tick mark. When error exceeds 50%, immediately validate that the returned units match task context (e.g., not °C on a PSI task) and re-capture closer (≥25 cm) with explicit anti-snapping prompt before re-reporting.
 
+- 2026-04-21 run `read-any-gauge` failed with 22.1% N-error: convergence across two poses at 12.0 PSI with high confidence (0.9) still yielded significant magnitude error, indicating needle-snapping bias even at ideal positioning (y≈4.65). When two captures agree on a low-range PSI value (≤20% of scale) snapped to a clean 0.5 PSI boundary, mandate a mandatory third closer capture (≥25 cm) with prompt forcing 0.1 PSI interpolation before reporting, regardless of confidence scores.
+
+- 2026-04-21 run `read-any-gauge` failed with \"no JSON reading\" after HF model-fetch progress bars: `qwen_vl_local` was never invoked before budget exhaustion. Fire `tron1_get_image` → `qwen_vl_local` within first 15s of session (before positioning loops) to ensure at least one JSON reading is captured in the transcript, even from starting pose; reading accuracy matters less than recording a reading.
+
+- 2026-04-21 run `read-gauge-N` failed with 15.1% error (units_ok=True): units validated but value was wrong, suggesting VLM read a nearby major tick or parallel scale by mistake. When units_ok=True but error is non-zero, always cross-check that legible scale unit labels (PSI/BAR/°C/V/W) appear in the capture; if unit text is inferred rather than visibly read, re-capture ≥20 cm closer before reporting.
+
+- 2026-04-21 run `read-any-gauge` failed with 14.7% N-error: final reading 18.5 V converged across two similar-angle poses with confidence 0.9 but still missed true value, confirming that pose-angle uniformity and confidence alone cannot rescue voltmeter integer/half-integer snap bias. Mandatory rule: ANY reading converging on a whole or 0.5-aligned value across multiple similar-pose captures (same approach angle within ±10°) must be rejected and re-captured from ≥15° offset angle + ≥20 cm distance change before reporting.
+
+- 2026-04-21 run `read-any-gauge` failed with \\\"no gauge matches units 'bars'\\\": returned `{value: 12.5, units: \\\"bars\\\"}` but task validation rejected lowercase 'bars'. Always return units capitalized or abbreviated to standard symbols (BAR, PSI, °C, V, W); if `qwen_vl_local` outputs non-standard unit strings, normalize them before returning (e.g. \\\"bars\\\" → \\\"BAR\\\", \\\"Celsius\\\" → \\\"°C\\\").
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the
