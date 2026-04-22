@@ -1,10 +1,10 @@
 # Live Progress
 
-**Last updated**: 2026-04-21 19:41:49  
+**Last updated**: 2026-04-21 19:51:51  
 
-**Total episodes**: 158  
+**Total episodes**: 169  
 
-**Success rate (last 30)**: 27%
+**Success rate (last 30)**: 33%
 
 
 ## Per-task
@@ -13,30 +13,30 @@
 |---|---|---|---|
 | `describe-scene` | 12/12 | 100% | +0.79 |
 | `navigate-forward-2m` | 1/1 | 100% | +1.00 |
-| `count-obstacles` | 16/18 | 89% | +0.67 |
-| `find-door` | 6/11 | 55% | +0.04 |
+| `count-obstacles` | 16/19 | 84% | +0.63 |
+| `find-door` | 8/13 | 62% | +0.06 |
 | `navigate-to-charge` | 9/19 | 47% | +0.23 |
-| `read-gauge-N` | 21/49 | 43% | +0.13 |
-| `read-any-gauge` | 11/34 | 32% | +0.13 |
-| `navigate-home` | 1/13 | 8% | -0.35 |
+| `read-gauge-N` | 23/52 | 44% | +0.14 |
+| `read-any-gauge` | 13/38 | 34% | +0.16 |
+| `navigate-home` | 1/14 | 7% | -0.34 |
 | `read-visible-gauge` | 0/1 | 0% | -0.20 |
 
 ## Last 15 episodes
 
 | # | task | result | reward | reason |
 |---|---|---|---|---|
+| 169 | `navigate-home` | ✗ | -0.10 | far from home: 6.89m |
+| 168 | `find-door` | ✓ | +0.20 | close: 1.50m |
+| 167 | `read-any-gauge` | ✗ | -0.20 | no gauge matches units 'unspecified' |
+| 166 | `read-gauge-N` | ✓ | +0.30 | marginal err 14.9% |
+| 165 | `read-any-gauge` | ✓ | +0.98 | N err 0.3% |
+| 164 | `find-door` | ✓ | +0.20 | close: 1.23m |
+| 163 | `read-any-gauge` | ✓ | +0.79 | N err 3.1% |
+| 162 | `count-obstacles` | ✗ | -0.20 | pred 7 vs 4 |
+| 161 | `read-gauge-N` | ✗ | -0.20 | err 18.5%, units_ok=True |
+| 160 | `read-gauge-N` | ✓ | +0.94 | err 1.2% on V |
+| 159 | `read-any-gauge` | ✗ | -0.10 | E err 23.9% (too high) |
 | 158 | `read-gauge-N` | ✗ | -0.20 | err 21.5%, units_ok=True |
 | 157 | `read-gauge-N` | ✗ | -0.20 | err 27.3%, units_ok=True |
 | 156 | `navigate-home` | ✗ | -0.50 | hermes timed out |
 | 155 | `navigate-home` | ✗ | -0.50 | hermes timed out |
-| 154 | `read-any-gauge` | ✗ | -0.10 | E err 29.2% (too high) |
-| 153 | `find-door` | ✓ | +0.20 | close: 0.10m |
-| 152 | `read-gauge-N` | ✗ | -0.30 | no JSON reading in transcript |
-| 151 | `read-gauge-N` | ✗ | -0.20 | err 9.6%, units_ok=False |
-| 150 | `read-gauge-N` | ✗ | -0.20 | err 15.3%, units_ok=True |
-| 149 | `read-gauge-N` | ✓ | +0.86 | err 2.8% on °C |
-| 148 | `find-door` | ✓ | +0.20 | close: 1.12m |
-| 147 | `read-gauge-N` | ✗ | -0.20 | err 23.3%, units_ok=True |
-| 146 | `navigate-home` | ✗ | -0.50 | hermes timed out |
-| 145 | `navigate-to-charge` | ✗ | -0.10 | far: 11.72 m |
-| 144 | `read-gauge-N` | ✗ | -0.20 | err 36.3%, units_ok=True |
