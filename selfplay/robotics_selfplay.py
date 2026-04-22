@@ -39,12 +39,20 @@ def _sample_task(failure_boost: float = 1.5) -> T.Task:
     return random.choices(T.TASKS, weights=weights, k=1)[0]
 
 
+HERMES_MODEL = "anthropic/claude-haiku-4-5-20251001"
+# (Was claude-opus-4-7; swapped to Haiku 4.5 to cut self-play cost ~20×.
+#  Override with HERMES_SELFPLAY_MODEL env var if you want Opus back.)
+
+
 def _run_hermes(prompt: str, budget_s: int) -> tuple[str, int]:
     """Call `hermes chat -q <prompt> -Q` with the robotics toolsets enabled.
 
     Returns (transcript, returncode). 124 = timeout, 127 = PATH miss.
     """
+    import os as _os
+    model = _os.getenv("HERMES_SELFPLAY_MODEL", HERMES_MODEL)
     cmd = ["hermes", "chat", "-q", prompt, "-Q",
+           "-m", model,
            "-t", "tron1,vision_local,skills"]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=budget_s)
@@ -82,7 +90,10 @@ def _reflect_on_failure(task_id: str, reason: str, transcript_tail: str) -> None
         f"actionable lesson for future runs. Keep it under 2 sentences. "
         f"Reply with just the word 'DONE' when the patch is applied."
     )
+    import os as _os
+    model = _os.getenv("HERMES_SELFPLAY_MODEL", HERMES_MODEL)
     cmd = ["hermes", "chat", "-q", prompt, "-Q",
+           "-m", model,
            "-t", "skills", "--max-turns", "6"]
     try:
         subprocess.run(cmd, capture_output=True, text=True, timeout=90)

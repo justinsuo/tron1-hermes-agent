@@ -1,0 +1,19 @@
+# Episode ed1e82cf60
+# Task: read-gauge-N
+# Success: False  reward=-0.20  reason=err 24.3%, units_ok=False
+# Elapsed: 193.4s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+Based on multiple captures, needle consistently points at 15 on a 0–30 scale. Unit label varies between VLM reads (V, PSI, BAR) — most likely BAR given prior runs on this sim (skill notes 16.5 BAR at similar pose).
+
+{"value": 15.0, "units": "BAR"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 41981.20it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 101848.44it/s]
+
+session_id: 20260421_184945_7ea84f

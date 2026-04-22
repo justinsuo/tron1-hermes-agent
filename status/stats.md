@@ -1,10 +1,10 @@
 # Live Progress
 
-**Last updated**: 2026-04-21 18:51:39  
+**Last updated**: 2026-04-21 18:54:08  
 
-**Total episodes**: 127  
+**Total episodes**: 128  
 
-**Success rate (last 30)**: 53%
+**Success rate (last 30)**: 50%
 
 
 ## Per-task
@@ -15,7 +15,7 @@
 | `navigate-forward-2m` | 1/1 | 100% | +1.00 |
 | `count-obstacles` | 15/16 | 94% | +0.71 |
 | `navigate-to-charge` | 9/15 | 60% | +0.32 |
-| `read-gauge-N` | 18/36 | 50% | +0.18 |
+| `read-gauge-N` | 18/37 | 49% | +0.17 |
 | `find-door` | 4/9 | 44% | +0.00 |
 | `read-any-gauge` | 10/30 | 33% | +0.14 |
 | `navigate-home` | 1/8 | 12% | -0.31 |
@@ -25,6 +25,7 @@
 
 | # | task | result | reward | reason |
 |---|---|---|---|---|
+| 128 | `read-gauge-N` | ✗ | -0.20 | err 24.3%, units_ok=False |
 | 127 | `count-obstacles` | ✓ | +1.00 | correct count = 4 |
 | 126 | `read-gauge-N` | ✗ | -0.20 | err 41.2%, units_ok=True |
 | 125 | `navigate-to-charge` | ✓ | +0.69 | within 0.31 m |
@@ -39,4 +40,3 @@
 | 116 | `find-door` | ✓ | +0.55 | door dist 0.91m bearing +18° |
 | 115 | `navigate-to-charge` | ✓ | +0.72 | within 0.28 m |
 | 114 | `read-any-gauge` | ✗ | -0.10 | E err 25.5% (too high) |
-| 113 | `count-obstacles` | ✓ | +1.00 | correct count = 4 |
