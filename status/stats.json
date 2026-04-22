@@ -1,10 +1,10 @@
 {
-  "total": 175,
-  "recent_rate_pct": 40.0,
+  "total": 185,
+  "recent_rate_pct": 43.3,
   "per_task": {
     "describe-scene": {
-      "ok": 12,
-      "total": 12,
+      "ok": 13,
+      "total": 13,
       "rate_pct": 100.0,
       "avg_reward": 0.792
     },
@@ -21,28 +21,28 @@
       "avg_reward": 1.0
     },
     "count-obstacles": {
-      "ok": 17,
-      "total": 20,
-      "rate_pct": 85.0,
-      "avg_reward": 0.645
+      "ok": 18,
+      "total": 21,
+      "rate_pct": 85.7,
+      "avg_reward": 0.629
     },
     "read-gauge-N": {
-      "ok": 23,
-      "total": 54,
-      "rate_pct": 42.6,
-      "avg_reward": 0.124
+      "ok": 25,
+      "total": 57,
+      "rate_pct": 43.9,
+      "avg_reward": 0.13
     },
     "navigate-home": {
       "ok": 2,
-      "total": 15,
-      "rate_pct": 13.3,
-      "avg_reward": -0.293
+      "total": 16,
+      "rate_pct": 12.5,
+      "avg_reward": -0.306
     },
     "read-any-gauge": {
       "ok": 13,
-      "total": 39,
-      "rate_pct": 33.3,
-      "avg_reward": 0.149
+      "total": 43,
+      "rate_pct": 30.2,
+      "avg_reward": 0.119
     },
     "find-door": {
       "ok": 9,
@@ -57,5 +57,5 @@
       "avg_reward": 0.228
     }
   },
-  "ts": 1776826912.908254
+  "ts": 1776827514.916469
 }
