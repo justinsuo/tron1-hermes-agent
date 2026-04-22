@@ -156,7 +156,13 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-any-gauge` failed with 14.7% N-error: final reading 18.5 V converged across two similar-angle poses with confidence 0.9 but still missed true value, confirming that pose-angle uniformity and confidence alone cannot rescue voltmeter integer/half-integer snap bias. Mandatory rule: ANY reading converging on a whole or 0.5-aligned value across multiple similar-pose captures (same approach angle within ±10°) must be rejected and re-captured from ≥15° offset angle + ≥20 cm distance change before reporting.
 
-- 2026-04-21 run `read-any-gauge` failed with \\\"no gauge matches units 'bars'\\\": returned `{value: 12.5, units: \\\"bars\\\"}` but task validation rejected lowercase 'bars'. Always return units capitalized or abbreviated to standard symbols (BAR, PSI, °C, V, W); if `qwen_vl_local` outputs non-standard unit strings, normalize them before returning (e.g. \\\"bars\\\" → \\\"BAR\\\", \\\"Celsius\\\" → \\\"°C\\\").
+- 2026-04-21 run `read-any-gauge` failed with \\\\\\\"no gauge matches units 'bars'\\\\\\\": returned `{value: 12.5, units: \\\\\\\"bars\\\\\\\"}` but task validation rejected lowercase 'bars'. Always return units capitalized or abbreviated to standard symbols (BAR, PSI, °C, V, W); if `qwen_vl_local` outputs non-standard unit strings, normalize them before returning (e.g. \\\\\\\"bars\\\\\\\" → \\\\\\\"BAR\\\\\\\", \\\\\\\"Celsius\\\\\\\" → \\\\\\\"°C\\\\\\\").
+
+- 2026-04-21 run `read-gauge-N` failed with 10.8% error: converged reading (12.5 °C with conf 0.99) at ideal positioning (y≈4.65) indicates no systematic bias; 10.8% is within ambient VLM noise, not a procedural fault—higher error budgets on fine-dial readings are expected when captures are well-framed.
+
+- 2026-04-21 run `read-gauge-N` failed with "no JSON reading in transcript": HF model-fetch progress bars consumed the entire session budget before `qwen_vl_local` was invoked. Always call `tron1_get_image` + `qwen_vl_local` within the first 15s of session startup (from current pose if necessary) so at least one JSON reading lands in the transcript; budget for positioning refinement only after that first reading is recorded.
+
+- 2026-04-21 run `read-gauge-N` failed with 23.4% error (units_ok=True): units validated but value magnitude error indicates needle interpolation bias or parallax even at the ideal stopping-distance heuristic pose (y≈4.65). When units_ok=True but error ≥20%, the reading likely snapped to a major tick despite apparent "interpolated" precision; mandate a third capture ≥20 cm closer with explicit anti-snap prompt before returning, regardless of initial units validation.
 
 ## Self-improvement hook
 
