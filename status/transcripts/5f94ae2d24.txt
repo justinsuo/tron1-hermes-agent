@@ -1,0 +1,21 @@
+# Episode 5f94ae2d24
+# Task: read-any-gauge
+# Success: False  reward=-0.10  reason=N err 10.3% (too high)
+# Elapsed: 52.1s
+# Prompt: There are 3 analog gauges in this room — NORTH at (0,5.85), EAST at (5.85,-1.5), WEST at (-5.85,2.0). Drive to any one of them and read it. Report JSON {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+The last reading seems to be from a different position. Let me go back to the earlier good reading. The second capture (at y≈4.65) gave a clear **100.0 PSI** reading with 0.95 confidence. That's the reliable reading.
+
+JSON {"value": 100.0, "units": "PSI"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 26184.64it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 324910.87it/s]
+
+session_id: 20260421_202112_f20c27
