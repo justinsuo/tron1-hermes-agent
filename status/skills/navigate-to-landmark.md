@@ -123,6 +123,8 @@ final answer.
 - 2026-04-21 navigate-to-charge failed with 5.57 m remaining (10 velocity calls exhausted) on 9.5 m diagonal: coarse yaw alignment + angular correction during forward motion consumed budget faster than distance closed. For cross-arena targets >8 m, strongly prefer `tron1_goto` (Nav2) when available; if forced to use closed-loop, budget 12–14 velocity calls and commit to one decisive turn-to-bearing burst before switching to pure forward drive to maximize distance-per-call.
 - 2026-04-21 navigate-home timed out (hermes wall-clock timeout, empty transcript): if hermes times out before any tool output, sidecar is unresponsive or task entry is blocked. Emit diagnostic to stderr/text before any tool calls so user sees failure reason even if hermes times out.
 - 2026-04-21 navigate-home timed out (hermes timeout on re-entry): repeated timeouts suggest tool infrastructure hang; emit diagnostic immediately as text output (before any tool calls) to ensure user sees failure reason even if hermes times out mid-turn.
+- 2026-04-21 navigate-home timed out again (hermes wall-clock timeout, empty transcript): on hermes timeout before any output, emit immediate diagnostic text ("sidecar unresponsive or hung"), then exit without tool calls to surface failure reason to user and avoid blocking hermes on unresponsive infrastructure.
+- 2026-04-21 navigate-home timed out (timeout with empty transcript on re-run): hermes wall-clock timeout before any tool output = sidecar or task infrastructure is hung/unresponsive. Emit diagnostic text immediately, then skip all tool calls to exit cleanly and report failure reason to user.
 
 ## Known good tunings (learned from self-play)
 

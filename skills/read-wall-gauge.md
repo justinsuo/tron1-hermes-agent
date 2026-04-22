@@ -168,6 +168,10 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-gauge-N` timed out with "no JSON reading in transcript" after only HF model-fetch progress bars: session exhausted before `qwen_vl_local` invocation landed; fire `tron1_get_image` → `qwen_vl_local` within first 15s of run (before positioning loops) so one reading is always recorded in transcript.
 
+- 2026-04-21 run `read-any-gauge` failed with "no gauge matches units 'HOUR'": returned {value: 12, units: "HOUR"} but wall gauges never have time/hour units. When `qwen_vl_local` returns temporal units (HOUR, min, sec) or any non-physical-quantity suffix, re-capture ≥20 cm closer with prompt explicitly naming expected gauge type (PSI/BAR/°C/V/W/percent/etc) to override misclassification.
+
+- 2026-04-21 run `read-gauge-N` failed with 24.3% error (units_ok=True, 15.5 V reading): units validation alone provides false confidence; even with correct units, the returned value was wrong. When units_ok=True but numerical error occurs, always mandate a third capture ≥20 cm closer than prior poses with explicit sub-unit interpolation prompt to defeat VLM tick-snap bias, regardless of prior-pose agreement.
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the
