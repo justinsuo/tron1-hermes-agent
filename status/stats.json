@@ -1,6 +1,6 @@
 {
-  "total": 193,
-  "recent_rate_pct": 46.7,
+  "total": 201,
+  "recent_rate_pct": 43.3,
   "per_task": {
     "describe-scene": {
       "ok": 13,
@@ -21,22 +21,22 @@
       "avg_reward": 1.0
     },
     "count-obstacles": {
-      "ok": 18,
-      "total": 21,
-      "rate_pct": 85.7,
-      "avg_reward": 0.629
+      "ok": 19,
+      "total": 22,
+      "rate_pct": 86.4,
+      "avg_reward": 0.645
     },
     "read-gauge-N": {
-      "ok": 27,
-      "total": 61,
-      "rate_pct": 44.3,
-      "avg_reward": 0.123
+      "ok": 30,
+      "total": 65,
+      "rate_pct": 46.2,
+      "avg_reward": 0.151
     },
     "navigate-home": {
       "ok": 2,
-      "total": 17,
-      "rate_pct": 11.8,
-      "avg_reward": -0.318
+      "total": 19,
+      "rate_pct": 10.5,
+      "avg_reward": -0.337
     },
     "read-any-gauge": {
       "ok": 13,
@@ -52,10 +52,10 @@
     },
     "navigate-to-charge": {
       "ok": 9,
-      "total": 19,
-      "rate_pct": 47.4,
-      "avg_reward": 0.228
+      "total": 20,
+      "rate_pct": 45.0,
+      "avg_reward": 0.212
     }
   },
-  "ts": 1776828116.73709
+  "ts": 1776828718.580332
 }

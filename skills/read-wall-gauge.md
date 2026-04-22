@@ -164,6 +164,10 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-gauge-N` failed with 23.4% error (units_ok=True): units validated but value magnitude error indicates needle interpolation bias or parallax even at the ideal stopping-distance heuristic pose (y≈4.65). When units_ok=True but error ≥20%, the reading likely snapped to a major tick despite apparent "interpolated" precision; mandate a third capture ≥20 cm closer with explicit anti-snap prompt before returning, regardless of initial units validation.
 
+- 2026-04-21 run `read-any-gauge` failed with 10.3% N-error: single reading reported 100.0 PSI (high-confidence, units_ok=True) from ideal y≈4.65 pose, confirming snap-to-major-tick bias on round 100 PSI despite verbatim JSON prompt. Always enforce ≥2 independent captures even when units_ok=True and positioning is perfect; round values on pressure/voltage dials are tick-snap artifacts, not interpolations.
+
+- 2026-04-21 run `read-gauge-N` timed out with "no JSON reading in transcript" after only HF model-fetch progress bars: session exhausted before `qwen_vl_local` invocation landed; fire `tron1_get_image` → `qwen_vl_local` within first 15s of run (before positioning loops) so one reading is always recorded in transcript.
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the
