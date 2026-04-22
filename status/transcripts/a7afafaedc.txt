@@ -1,0 +1,33 @@
+# Episode a7afafaedc
+# Task: read-gauge-N
+# Success: False  reward=-0.20  reason=err 10.8%, units_ok=False
+# Elapsed: 67.6s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+Excellent! The third capture with anti-snapping prompt returned:
+- value: 15.5 PSI ✓
+- units: "PSI" ✓
+- confidence: 0.9 ✓
+
+This is different from the second capture (15.0 PSI), providing useful refinement. According to the skill's procedures and failure-mode notes, when multiple captures show slightly different readings (two at 15.0, one at 15.5), I should trust the reading that comes from the most explicit anti-snapping prompt and shows finer interpolation detail.
+
+The three captures are:
+1. First attempt (invalid units: "15") - discarded
+2. Second capture: 15.0 PSI (confidence 0.99, units validated)
+3. Third capture: 15.5 PSI (confidence 0.90, anti-snap prompt, explicitly interpolated between ticks)
+
+Given the skill's strong emphasis on avoiding whole-number snap bias and the explicit anti-snap prompt on the third capture yielding 15.5 PSI, the most reliable reading is **15.5 PSI**. This value shows proper interpolation between labeled tick marks rather than snapping to a major mark.
+
+{"value": 15.5, "units": "PSI"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 17299.34it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 180930.76it/s]
+
+session_id: 20260421_210433_d6fad8

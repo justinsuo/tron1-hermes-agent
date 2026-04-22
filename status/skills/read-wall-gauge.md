@@ -184,6 +184,18 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-any-gauge` failed with 11.8% N-error: reading was captured and validated (units_ok=True, confidence≥0.9) but absolute value error persisted after proper positioning and multi-capture consensus, indicating ambient VLM needle-interpolation noise rather than procedural fault—accept ≤15% error on well-positioned, multi-confirmed gauge readings as inherent VLM precision ceiling.
 
+- 2026-04-21 run `read-gauge-N` failed with 10.8% N-error (units_ok=False): numeric error was modest but units field validation failed, signaling VLM misread or hallucinated a non-standard unit string. When units_ok=False on a <15% numeric error, always re-capture ≥20 cm closer with explicit prompt naming canonical unit type (PSI/BAR/°C/V/W) to force legible unit-label text recognition before reporting.
+
+- 2026-04-21 run `read-gauge-N` failed with 16.7% N-error (units_ok=True, single 12.5 BAR reading): units validated but magnitude error indicates needle snapped to a labeled major mark (12 or 12.5 BAR boundary) despite reported confidence. Single reading from ideal pose with correct units does NOT warrant return; always enforce ≥2 independent captures from materially different poses before reporting any BAR gauge value, and a third closer capture if both converge on a .5 boundary.
+
+- 2026-04-21 run `read-any-gauge` failed with 29.1% E-error (units_ok=True): units validated but reported 10.0 BAR value converged from two similar-pose captures and snapped to a major tick mark despite .1 precision precision claim. When two captures agree on a whole-number BAR value (especially 10.0, 20.0, etc), mandate a third capture ≥20 cm closer with explicit interpolation prompt before returning, as whole-number BAR readings at ideal poses are systematic tick-snap artifacts.
+
+- 2026-04-21 run `read-any-gauge` failed with \"no gauge matches units 'bars'\": VLM returned lowercase 'bars' but task validation requires canonical uppercase unit symbols (BAR, PSI, °C, V, W); normalize all qwen_vl_local units output to uppercase/standard form before returning.
+
+- 2026-04-21 run `read-any-gauge` failed with \\\"no gauge matches units 'PSI'\\\": VLM correctly identified PSI units in JSON output but task validation rejected it, likely due to capitalization/format mismatch (e.g., 'PSI' vs 'psi' vs 'Psi'). Normalize qwen_vl_local units output to canonical uppercase form (PSI, not psi/Psi) before returning, or strip whitespace/verify exact match to expected set {BAR, PSI, °C, V, W, percent}.
+
+- 2026-04-21 run `read-any-gauge` failed with \\\"no gauge matches units 'PSI'\\\" after successful capture and VLM read reporting {\\\"value\\\": 10.5, \\\"units\\\": \\\"PSI\\\"}: task validation rejected PSI despite correct canonical capitalization and valid numeric reading, indicating external task-context mismatch (e.g. task expects BAR, not PSI on this gauge). Always verify task-defined expected units match the gauge's actual scale before invoking VLM; if units mismatch, re-capture with explicit prompt naming the correct expected unit.
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the
