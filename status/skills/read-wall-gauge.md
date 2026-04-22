@@ -232,9 +232,19 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-any-gauge` failed with 25.6% N-error: VLM reported 12.0 °C (confidence 0.9, units_ok=True) from a single capture, but magnitude error persisted despite correct units and high confidence—single captures on °C dials remain insufficient even when units validate. Always mandate ≥2 materially-different-pose captures before returning any temperature reading, regardless of units_ok=True or confidence≥0.9 status; single-capture unit validation is false confidence.
 
+- 2026-04-21 run `read-gauge-N` failed with \"no JSON reading in transcript\" (HF model-fetch progress bars only): Session budget exhausted during `qwen_vl_local` warmup before any inference completed. Invoke `tron1_get_image` + `qwen_vl_local` within first 10–15s of run (from starting pose, no positioning loop) to ensure at least one JSON gauge reading lands in transcript; budget for repositioning refinement only after first reading is logged.
+
+- 2026-04-21 run `read-gauge-N` (final failure): 8.6% error with units_ok=False indicates JSON units field rejection despite numeric reading (15.5 PSI reported with high confidence). When units_ok=False, the units string is malformed or non-canonical—never return readings with units_ok=False; always re-capture ≥20 cm closer and normalize qwen_vl_local units output to exact canonical form (BAR/PSI/°C/V/W) before returning, or discard and re-invoke VLM with explicit unit-label-text prompt if first read had bad units.
+- 2026-04-21 run `read-gauge-N` failed with 8.1% error (units_ok=False): Only one VLM reading attempted before session timeout; HF model-fetch consumed most budget, leaving no retry loop. When units_ok=False on any reading, immediately invoke a second capture ≥20 cm closer with explicit canonical-unit prompt within the same session, rather than letting session timeout end the run—units failures require urgent inline correction, not post-hoc analysis.
+- 2026-04-21 run `read-gauge-N` failed with 23.0% error (units_ok=True): Units validated but magnitude error persists, likely snapped-to-major-tick bias even with correct units; final reading captured from session's HF model-fetch window. Always mandate ≥2 independent multi-pose captures + a third ≥20 cm closer before returning any gauge reading, regardless of units_ok=True status—unit validation alone does not certify needle interpolation correctness.
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the
 `(image_path, gauge_value)` pair to `~/tron1-selfplay/gauge_samples/` so the
 next LoRA fine-tune of Qwen VL can use ground-truth-labeled data from the real
 world (not just the sim).
+
+## Critical failure: "no JSON reading in transcript"
+
+- 2026-04-21 run `read-gauge-N` timed out with only HF fetch progress bars and **no JSON reading in transcript**: Session ended during model-fetch warmup before `qwen_vl_local` inference call completed. **Action:** Call `tron1_get_image` → `qwen_vl_local` within first 10s of run startup (from current/starting pose, skip positioning refinement) so at least one JSON gauge reading is always recorded in transcript before budget exhaustion; defer repositioning loops to a second iteration if budget permits.
