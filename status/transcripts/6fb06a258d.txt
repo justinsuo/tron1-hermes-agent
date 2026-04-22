@@ -1,7 +1,7 @@
-# Episode 694ce411cf
+# Episode 6fb06a258d
 # Task: navigate-home
 # Success: False  reward=-0.50  reason=hermes timed out
-# Elapsed: 131.3s
+# Elapsed: 132.0s
 # Prompt: Use tron1_velocity (and tron1_get_pose to check progress) to return to the HOME zone — the green circular floor marker at world (0, -4). Stop within 0.5 m. Report the final pose.
 
 === TRANSCRIPT ===

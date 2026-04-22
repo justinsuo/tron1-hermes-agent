@@ -147,6 +147,7 @@ final answer.
 - 2026-04-21 navigate-home hermes timeout (empty transcript): sidecar or tool infrastructure hung during initialization before first tool call. Always emit diagnostic text as first response (before any tool calls) to surface failure reason to user even if hermes times out mid-turn.
 - 2026-04-21 navigate-to-charge failed (6.66 m far) after 10-call velocity budget exhausted on 9.5 m diagonal: Confirms that closed-loop velocity control bottlenecks on yaw-correction overhead for cross-arena targets >9 m; 12–14 calls required for pure closed-loop or switch to `tron1_goto` (Nav2) for path planning instead.
 - 2026-04-21 navigate-home hermes timeout (empty transcript, multiple re-runs): Repeated wall-clock timeouts indicate sidecar is unresponsive or hung before first tool call. Always emit diagnostic text immediately upon task entry (before any tool calls) to surface failure reason to user even if hermes times out.
+- 2026-04-21 navigate-home task timed out again (empty transcript): If hermes times out before any tool output, sidecar infrastructure is hung; emit diagnostic message as first text response, skip all tool calls, and exit immediately to avoid blocking on unresponsive infrastructure.
 
 ## Known good tunings (learned from self-play)
 
