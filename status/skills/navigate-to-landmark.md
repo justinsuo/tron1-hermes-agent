@@ -125,6 +125,9 @@ final answer.
 - 2026-04-21 navigate-home timed out (hermes timeout on re-entry): repeated timeouts suggest tool infrastructure hang; emit diagnostic immediately as text output (before any tool calls) to ensure user sees failure reason even if hermes times out mid-turn.
 - 2026-04-21 navigate-home timed out again (hermes wall-clock timeout, empty transcript): on hermes timeout before any output, emit immediate diagnostic text ("sidecar unresponsive or hung"), then exit without tool calls to surface failure reason to user and avoid blocking hermes on unresponsive infrastructure.
 - 2026-04-21 navigate-home timed out (timeout with empty transcript on re-run): hermes wall-clock timeout before any tool output = sidecar or task infrastructure is hung/unresponsive. Emit diagnostic text immediately, then skip all tool calls to exit cleanly and report failure reason to user.
+- 2026-04-21 navigate-home timed out again (timeout with empty transcript on latest re-run): On hermes wall-clock timeout with no transcript, emit diagnostic (\"sidecar/tools unresponsive\") as first text before any tool invocation, then exit immediately to ensure user sees failure reason.
+- 2026-04-21 navigate-to-charge failed with final distance 1.63 m (far: 1.63 m) after 12 velocity calls; yaw drift + Nav2 re-entry instability suggest simulation/frame inconsistency or oscillation on return to closed-loop after Nav2 timeout. When drift persists across multiple bursts, detect within 2 calls and commit: either switch to one decisive 2.0 s turn-then-pure-drive sequence, or escalate to manual pose-set/sidecar restart rather than chase correction across budget-exhausting loops.
+- 2026-04-21 navigate-home timed out (hermes wall-clock timeout, empty transcript): sidecar is unresponsive or initialization is hung; emit diagnostic text immediately before any tool calls to surface failure reason to user even if hermes times out mid-turn.
 
 ## Known good tunings (learned from self-play)
 

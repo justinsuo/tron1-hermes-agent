@@ -172,6 +172,10 @@ Do **not** use for digital readouts — those are better served by generic OCR.
 
 - 2026-04-21 run `read-gauge-N` failed with 24.3% error (units_ok=True, 15.5 V reading): units validation alone provides false confidence; even with correct units, the returned value was wrong. When units_ok=True but numerical error occurs, always mandate a third capture ≥20 cm closer than prior poses with explicit sub-unit interpolation prompt to defeat VLM tick-snap bias, regardless of prior-pose agreement.
 
+- 2026-04-21 run `read-gauge-N` failed with 25.7% error (units_ok=True, 10.5 BAR): two captures agreed at 10 and 10.5 BAR but final reading was still wrong, proving that half-integer convergence on low-range BAR dials is an unreliable anchor. Mandatory: when two captures converge on a low-range half-integer BAR value (≤20% of dial scale), discard both and take a fresh third capture ≥25 cm closer with prompt forcing 0.1 BAR interpolation before returning any value.
+
+- 2026-04-21 run `read-any-gauge` failed with "no gauge matches units 'degrees'": returned {value: 12, units: "degrees"} but task validation rejected non-standard unit strings; VLM hallucinated "degrees" when it could not legibly read the dial's actual unit labels. Always re-capture ≥20 cm closer if units field is non-standard (anything other than BAR, PSI, °C, V, W, percent, etc) and explicitly prompt VLM to name visible unit text before reporting.
+
 ## Self-improvement hook
 
 After any successful invocation with `confidence >= 0.9`, record the
