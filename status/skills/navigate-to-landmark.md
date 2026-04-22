@@ -119,6 +119,7 @@ final answer.
 - 2026-04-21 navigate-home timed out (empty transcript): on hermes timeout during skill execution, include a fast initial diagnostic check (e.g., `tron1_ping` with 2–3 s timeout) as the very first tool call to confirm sidecar responsiveness before attempting full navigation, reducing timeout delay caused by hanging pose-reads or unresponsive infrastructure.
 - 2026-04-21 navigate-home succeeded (0.46 m within tolerance) but task marked FAILED with \"far from home: 6.89m\" — task system applies stricter success metric than displayed final distance. Always confirm final reported distance matches task success threshold; the skill's 0.5 m tolerance may not match the actual task requirement.
 - 2026-04-21 navigate-home timed out (seventh time, empty transcript): repeated hermes wall-clock timeouts on task entry indicate sidecar infrastructure is dead or critically unresponsive. Add a fast `tron1_ping` or tool-list check with 2 s timeout as the absolute first statement—if no response, emit diagnostic and fail immediately rather than blocking hermes on hanging tool calls.
+- 2026-04-21 navigate-home timed out (hermes timeout with empty transcript): hermes wall-clock timeout before any tool output means sidecar initialization or tool infrastructure is hung. Emit diagnostic reason in text before calling any tools to ensure failure feedback reaches user even if hermes times out.
 
 ## Known good tunings (learned from self-play)
 
