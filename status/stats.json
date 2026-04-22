@@ -1,5 +1,5 @@
 {
-  "total": 169,
+  "total": 170,
   "recent_rate_pct": 33.3,
   "per_task": {
     "describe-scene": {
@@ -21,10 +21,10 @@
       "avg_reward": 1.0
     },
     "count-obstacles": {
-      "ok": 16,
-      "total": 19,
-      "rate_pct": 84.2,
-      "avg_reward": 0.626
+      "ok": 17,
+      "total": 20,
+      "rate_pct": 85.0,
+      "avg_reward": 0.645
     },
     "read-gauge-N": {
       "ok": 23,
@@ -57,5 +57,5 @@
       "avg_reward": 0.228
     }
   },
-  "ts": 1776826311.1659222
+  "ts": 1776826425.645612
 }

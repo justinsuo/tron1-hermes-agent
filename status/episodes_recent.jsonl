@@ -351,3 +351,6 @@
 {"ts":1776826261.077593,"event":"episode_start","episode_id":"0390c8a211","task":"navigate-home","backend":"mujoco-mac"}
 {"ts":1776826298.274432,"event":"episode_end","episode_id":"0390c8a211","task":"navigate-home","backend":"mujoco-mac","success":false,"reward":-0.1,"reason":"far from home: 6.89m","duration_s":37.197,"evidence":["rc=0","len=404","task=navigate-home"]}
 {"ts":1776826310.5695949,"event":"episode_start","episode_id":"8dabe4208f","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776826382.0778298,"event":"episode_start","episode_id":"8158b04550","task":"count-obstacles","backend":"mujoco-mac"}
+{"ts":1776826422.096141,"event":"episode_end","episode_id":"8158b04550","task":"count-obstacles","backend":"mujoco-mac","success":true,"reward":1.0,"reason":"correct count = 4","duration_s":40.018,"evidence":["rc=0","len=1239","task=count-obstacles"]}
+{"ts":1776826425.146701,"event":"episode_start","episode_id":"90a9af5117","task":"read-gauge-N","backend":"mujoco-mac"}
