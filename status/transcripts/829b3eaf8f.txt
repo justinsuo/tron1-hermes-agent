@@ -1,0 +1,37 @@
+# Episode 829b3eaf8f
+# Task: read-gauge-N
+# Success: True  reward=0.95  reason=err 1.0% on BAR
+# Elapsed: 90.4s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+  ⟳ compacting context…
+Capture 4 reading returned: **8.5 BAR** (confidence 0.9)
+
+Summary of all four captures:
+- Capture 1 (y≈4.72, standard): 10.0 BAR (confidence 0.9)  
+- Capture 2 (y≈4.91, closer + anti-snap): 10.5 BAR (confidence 1.0)  
+- Capture 3 (y≈4.81, rotated angle): 8.5 BAR (confidence 0.9)  
+- Capture 4 (y≈4.81, refresh): 8.5 BAR (confidence 0.9)
+
+**Consensus analysis:**
+Two distinct groups emerged:
+- 10.0–10.5 BAR: Captures 1 & 2 (head-on, closer distance)
+- 8.5 BAR: Captures 3 & 4 (both from y≈4.81 forward position)
+
+The repeated 8.5 BAR reading (Captures 3 & 4) with matching confidence (0.9 each) provides stronger evidence than a single 10.5. The rotated-viewpoint reading (Capture 3) and the refresh (Capture 4) both converge to 8.5 BAR, suggesting that position may reveal true needle location more accurately than the closer head-on shots, which may have suffered parallax or interpretation artifacts.
+
+**Final reading: 8.5 BAR**
+
+{"value": 8.5, "units": "BAR"}
+
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 41640.20it/s]
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 53898.77it/s]
+
+session_id: 20260421_222323_fe049d
