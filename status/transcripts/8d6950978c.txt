@@ -1,0 +1,25 @@
+# Episode 8d6950978c
+# Task: navigate-home
+# Success: True  reward=0.51  reason=home dist 0.49m
+# Elapsed: 57.6s
+# Prompt: Use tron1_velocity (and tron1_get_pose to check progress) to return to the HOME zone — the green circular floor marker at world (0, -4). Stop within 0.5 m. Report the final pose.
+
+=== TRANSCRIPT ===
+⚠️  Normalized model 'anthropic/claude-haiku-4-5-20251001' to 
+'claude-haiku-4-5-20251001' for anthropic.
+FINAL POSITION REPORT
+═══════════════════════════════════════════
+Robot position: (-0.15, -3.53)
+Target zone: (0, -4)
+Distance to target: 0.49 m ✓ (within 0.5 m)
+
+Final Pose:
+  x: -0.15 m
+  y: -3.53 m
+  z: 0.92 m
+  yaw: 1.758 rad (~100.7°)
+
+Status: REACHED HOME ZONE ✓
+
+
+session_id: 20260421_212424_3ad964
