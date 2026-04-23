@@ -1,10 +1,10 @@
 # Live Progress
 
-**Last updated**: 2026-04-22 13:44:16  
+**Last updated**: 2026-04-22 21:37:43  
 
-**Total episodes**: 371  
+**Total episodes**: 372  
 
-**Success rate (last 30)**: 50%
+**Success rate (last 30)**: 47%
 
 
 ## Per-task
@@ -15,7 +15,7 @@
 | `navigate-forward-2m` | 1/1 | 100% | +1.00 |
 | `count-obstacles` | 25/29 | 86% | +0.59 |
 | `find-door` | 15/20 | 75% | +0.15 |
-| `read-gauge-N` | 66/138 | 48% | +0.18 |
+| `read-gauge-N` | 66/139 | 47% | +0.18 |
 | `navigate-to-charge` | 10/36 | 28% | +0.08 |
 | `read-any-gauge` | 23/85 | 27% | +0.09 |
 | `navigate-home` | 9/39 | 23% | -0.26 |
@@ -25,6 +25,7 @@
 
 | # | task | result | reward | reason |
 |---|---|---|---|---|
+| 372 | `read-gauge-N` | ✗ | -0.30 | no JSON reading in transcript |
 | 371 | `read-gauge-N` | ✓ | +0.30 | marginal err 13.0% |
 | 370 | `navigate-to-charge` | ✗ | -0.10 | far: 9.91 m |
 | 369 | `read-any-gauge` | ✗ | -0.20 | no gauge matches units 'PSI' |
@@ -39,4 +40,3 @@
 | 360 | `read-gauge-N` | ✓ | +0.30 | marginal err 14.5% |
 | 359 | `read-gauge-N` | ✓ | +0.89 | err 2.1% on PSI |
 | 358 | `navigate-home` | ✗ | -0.50 | hermes timed out |
-| 357 | `read-gauge-N` | ✓ | +0.94 | err 1.1% on PSI |

@@ -10,12 +10,12 @@
 
 ## Live progress
 
-*Auto-updated every ~10 minutes. Last sync: **2026-04-22 13:44:16**.*
+*Auto-updated every ~10 minutes. Last sync: **2026-04-22 21:37:43**.*
 
-**371 total episodes · 50% success on the last 30**
+**372 total episodes · 47% success on the last 30**
 
-**pose** `(+0.00, -4.00, yaw=+1.29)`  
-**gauges** N=159.83 PSI · E=2.40 °C · W=9.87 BAR
+**pose** `(+0.00, -4.00, yaw=+1.57)`  
+**gauges** N=2.13 BAR · E=17.11 BAR · W=9.66 V
 
 ### Per-task breakdown
 
@@ -25,7 +25,7 @@
 | `navigate-forward-2m` | 1/1 | **100%** | +1.00 |
 | `count-obstacles` | 25/29 | **86%** | +0.59 |
 | `find-door` | 15/20 | **75%** | +0.15 |
-| `read-gauge-N` | 66/138 | **48%** | +0.18 |
+| `read-gauge-N` | 66/139 | **48%** | +0.17 |
 | `navigate-to-charge` | 10/36 | **28%** | +0.08 |
 | `read-any-gauge` | 23/85 | **27%** | +0.09 |
 | `navigate-home` | 9/39 | **23%** | -0.26 |

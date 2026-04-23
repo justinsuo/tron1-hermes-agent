@@ -39,9 +39,12 @@ def _sample_task(failure_boost: float = 1.5) -> T.Task:
     return random.choices(T.TASKS, weights=weights, k=1)[0]
 
 
-HERMES_MODEL = "anthropic/claude-haiku-4-5-20251001"
-# (Was claude-opus-4-7; swapped to Haiku 4.5 to cut self-play cost ~20×.
-#  Override with HERMES_SELFPLAY_MODEL env var if you want Opus back.)
+HERMES_MODEL = "mlx-community/Qwen3-14B-4bit"
+HERMES_PROVIDER = "auto"
+# (Historical: claude-opus-4-7 → claude-haiku-4-5 → local Qwen 3 14B 4-bit
+#  via mlx_lm.server at http://127.0.0.1:8080/v1. Zero API tokens.
+#  Hermes config.yaml pins model.provider=custom + base_url=localhost:8080/v1;
+#  passing --provider auto lets the CLI pick that up.)
 
 
 def _run_hermes(prompt: str, budget_s: int) -> tuple[str, int]:
@@ -51,6 +54,10 @@ def _run_hermes(prompt: str, budget_s: int) -> tuple[str, int]:
     """
     import os as _os
     model = _os.getenv("HERMES_SELFPLAY_MODEL", HERMES_MODEL)
+    # Provider is read from ~/.hermes/config.yaml (model.provider=custom +
+    # model.base_url=http://127.0.0.1:8080/v1). Passing --provider on the CLI
+    # forces a named provider (anthropic/openrouter/…) so we don't set it
+    # here — that way config.yaml's "custom" takes effect.
     cmd = ["hermes", "chat", "-q", prompt, "-Q",
            "-m", model,
            "-t", "tron1,vision_local,skills"]
