@@ -12,7 +12,12 @@ metadata:
 
 # Read a Wall Gauge
 
-## Overview
+```md
+## Failure notes
+
+- Original failure: Gauge not detected within timeout window
+- Ensure robot movement to gauge is fully completed before attempting read (add 2s delay after navigation confirmation)
+```
 
 The robot approaches a wall-mounted analog gauge, centers it in the camera
 frame, captures an image, runs the local Qwen 2.5 VL on it, and returns a

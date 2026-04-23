@@ -1,0 +1,11 @@
+# Episode 1a01492f7a
+# Task: find-door
+# Success: False  reward=-0.30  reason=hermes exit 1
+# Elapsed: 62.4s
+# Prompt: Follow the navigate-to-landmark skill. Target: door at world (5.0, 3.0), facing east (yaw ≈ 0). Current pose is (0, -4, yaw=π/2). Read the skill's 'Failure notes' before planning — use as many velocity bursts as needed (typically 6–10). Report final pose as your last message.
+
+=== TRANSCRIPT ===
+API call failed after 3 retries: Connection error.
+
+
+session_id: 20260422_230824_72f19e

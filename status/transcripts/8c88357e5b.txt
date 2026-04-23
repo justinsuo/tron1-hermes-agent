@@ -1,0 +1,11 @@
+# Episode 8c88357e5b
+# Task: read-any-gauge
+# Success: False  reward=-0.30  reason=hermes exit 1
+# Elapsed: 61.1s
+# Prompt: There are 3 analog gauges in this room — NORTH at (0,5.85), EAST at (5.85,-1.5), WEST at (-5.85,2.0). Drive to any one of them and read it. Report JSON {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+API call failed after 3 retries: Connection error.
+
+
+session_id: 20260422_230508_c5db61
