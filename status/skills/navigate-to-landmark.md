@@ -101,6 +101,7 @@ final answer.
 - **Dead-burst gotcha:** Very short/small commands (e.g. angular=-0.8 × 1.0 s, or linear=0.5 × 1.0 s) sometimes produce ZERO pose change in the Mac mujoco sim — the sidecar seems to swallow them. If pose is unchanged after a burst, re-issue with a longer duration (≥1.5–2 s) and/or higher magnitude rather than retrying the same command. Always check pose-delta, not just that the call returned ok.
 
 ## Failure notes
+- If 'far' distance remains > 5m, verify SLAM mapping accuracy and obstacle avoidance parameters before retrying navigation
 
 - 2026-04-21 charge run ran out of velocity budget (6 calls) with 5.37 m remaining after heading drift in a long burst. Keep bursts ≤1.0 s and re-read pose between them; budget ~8–10 velocity calls for cross-arena targets like charge (-4.5,-4.0) rather than trying to cover distance in fewer, longer commands.
 - 2026-04-21 find-door run failed with 5.80 m remaining after 5-call budget ran out on yaw overshoots from home (0,-4) to door (5,3). For ~8 m diagonals, separate turn bursts from drive bursts (don't combine angular+linear on big yaw errors) and request/reserve ≥8 velocity calls up front — or just use tron1_goto (Nav2) when available, which is more reliable for this distance.
