@@ -1,6 +1,3 @@
-{"ts":1776822164.920637,"event":"episode_end","episode_id":"bcb330406a","task":"read-any-gauge","backend":"mujoco-mac","success":false,"reward":-0.1,"reason":"N err 21.7% (too high)","duration_s":169.792,"evidence":["rc=0","len=454","task=read-any-gauge"]}
-{"ts":1776822183.545737,"event":"episode_start","episode_id":"d4c5ebbad3","task":"read-gauge-N","backend":"mujoco-mac"}
-{"ts":1776822284.314444,"event":"episode_end","episode_id":"d4c5ebbad3","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.2,"reason":"err 44.4%, units_ok=True","duration_s":100.769,"evidence":["rc=0","len=525","task=read-gauge-N"]}
 {"ts":1776822300.35611,"event":"episode_start","episode_id":"b413dd10ea","task":"navigate-to-charge","backend":"mujoco-mac"}
 {"ts":1776822406.494515,"event":"episode_end","episode_id":"b413dd10ea","task":"navigate-to-charge","backend":"mujoco-mac","success":true,"reward":0.6859587470491174,"reason":"within 0.31 m","duration_s":106.138,"evidence":["rc=0","len=398","task=navigate-to-charge"]}
 {"ts":1776822436.756237,"event":"episode_start","episode_id":"b8b93f4bb3","task":"read-gauge-N","backend":"mujoco-mac"}
@@ -498,3 +495,6 @@
 {"ts":1776839565.685738,"event":"episode_start","episode_id":"3b5704386b","task":"read-gauge-N","backend":"mujoco-mac"}
 {"ts":1776839601.258662,"event":"episode_end","episode_id":"3b5704386b","task":"read-gauge-N","backend":"mujoco-mac","success":true,"reward":0.3,"reason":"marginal err 13.0%","duration_s":35.573,"evidence":["rc=0","len=671","task=read-gauge-N"]}
 {"ts":1776839604.307109,"event":"episode_start","episode_id":"cb8ffe477f","task":"count-obstacles","backend":"mujoco-mac"}
+{"ts":1776918965.531797,"event":"episode_start","episode_id":"7fdd25c74d","task":"read-gauge-N","backend":"mujoco-mac"}
+{"ts":1776919000.084953,"event":"episode_end","episode_id":"7fdd25c74d","task":"read-gauge-N","backend":"mujoco-mac","success":false,"reward":-0.3,"reason":"no JSON reading in transcript","duration_s":34.553,"evidence":["rc=0","len=37","task=read-gauge-N"]}
+{"ts":1776919052.377323,"event":"episode_start","episode_id":"ed87082cf0","task":"read-gauge-N","backend":"mujoco-mac"}
