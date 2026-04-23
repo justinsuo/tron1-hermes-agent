@@ -1,0 +1,11 @@
+# Episode 654fca2608
+# Task: read-gauge-N
+# Success: False  reward=-0.20  reason=err 87.5%, units_ok=False
+# Elapsed: 265.0s
+# Prompt: Use the read-wall-gauge skill to read the gauge on the NORTH wall (at world y=+5.85). Drive to y≈4.65, capture with tron1_get_image, and read with qwen_vl_local. IMPORTANT: your final message MUST contain a JSON object on its own line formatted exactly as {"value": <float>, "units": "<str>"}.
+
+=== TRANSCRIPT ===
+{"value": 120.5, "units": "PSI"}
+
+
+session_id: 20260422_215151_023b0d
