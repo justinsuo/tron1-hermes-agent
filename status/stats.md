@@ -1,10 +1,10 @@
 # Live Progress
 
-**Last updated**: 2026-04-22 21:37:43  
+**Last updated**: 2026-04-22 21:47:45  
 
-**Total episodes**: 372  
+**Total episodes**: 375  
 
-**Success rate (last 30)**: 47%
+**Success rate (last 30)**: 40%
 
 
 ## Per-task
@@ -15,9 +15,9 @@
 | `navigate-forward-2m` | 1/1 | 100% | +1.00 |
 | `count-obstacles` | 25/29 | 86% | +0.59 |
 | `find-door` | 15/20 | 75% | +0.15 |
-| `read-gauge-N` | 66/139 | 47% | +0.18 |
+| `read-gauge-N` | 66/141 | 47% | +0.17 |
 | `navigate-to-charge` | 10/36 | 28% | +0.08 |
-| `read-any-gauge` | 23/85 | 27% | +0.09 |
+| `read-any-gauge` | 23/86 | 27% | +0.09 |
 | `navigate-home` | 9/39 | 23% | -0.26 |
 | `read-visible-gauge` | 0/1 | 0% | -0.20 |
 
@@ -25,6 +25,9 @@
 
 | # | task | result | reward | reason |
 |---|---|---|---|---|
+| 375 | `read-gauge-N` | ✗ | -0.30 | no JSON reading in transcript |
+| 374 | `read-any-gauge` | ✗ | -0.30 | no JSON reading |
+| 373 | `read-gauge-N` | ✗ | -0.30 | no JSON reading in transcript |
 | 372 | `read-gauge-N` | ✗ | -0.30 | no JSON reading in transcript |
 | 371 | `read-gauge-N` | ✓ | +0.30 | marginal err 13.0% |
 | 370 | `navigate-to-charge` | ✗ | -0.10 | far: 9.91 m |
@@ -37,6 +40,3 @@
 | 363 | `navigate-home` | ✓ | +0.30 | close: 0.86m |
 | 362 | `read-any-gauge` | ✓ | +0.58 | W err 6.2% |
 | 361 | `read-gauge-N` | ✓ | +0.30 | marginal err 13.3% |
-| 360 | `read-gauge-N` | ✓ | +0.30 | marginal err 14.5% |
-| 359 | `read-gauge-N` | ✓ | +0.89 | err 2.1% on PSI |
-| 358 | `navigate-home` | ✗ | -0.50 | hermes timed out |
