@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.justinsuo.tron1-supervisor</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/justinsuo/tron1-selfplay/supervisor.sh</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>DURATION_SEC</key>
+        <string>36000</string>   <!-- 10 hours -->
+        <key>BATCH_ROUNDS</key>
+        <string>50</string>
+        <key>BATCH_DELAY</key>
+        <string>8</string>
+        <key>PATH</key>
+        <string>/Users/justinsuo/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>/Users/justinsuo</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- KeepAlive: if supervisor exits (crashes, OOM, anything), launchd
+         respawns it. ThrottleInterval prevents rapid-fire restart loops. -->
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/justinsuo/tron1-selfplay</string>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/tron1-supervisor.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/tron1-supervisor.err.log</string>
+</dict>
+</plist>

@@ -1,0 +1,11 @@
+# Episode e62b94a46e
+# Task: count-obstacles
+# Success: False  reward=-0.30  reason=hermes exit 1
+# Elapsed: 66.4s
+# Prompt: Look around the room (rotate in place with tron1_velocity angular or take multiple photos from different yaws) and count the obstacle boxes/cones scattered on the floor. Answer: how many obstacles are there? Reply with a single integer after your reasoning.
+
+=== TRANSCRIPT ===
+API call failed after 3 retries: Connection error.
+
+
+session_id: 20260430_233408_f47def

@@ -34,9 +34,13 @@ tries=0
 while true; do
   tries=$((tries+1))
   echo "[keepalive $(date '+%H:%M:%S')] starting mlx_lm.server ($MODEL on :$PORT) — attempt #$tries"
+  # Qwen 3 defaults to emitting all reasoning in <think>…</think> blocks,
+  # which Hermes strips → empty transcript. Disable with
+  # chat-template-args. See mlx_lm.server --help.
   "$VENV/bin/python" -m mlx_lm server \
       --model "$MODEL" \
       --host 127.0.0.1 --port "$PORT" \
+      --chat-template-args '{"enable_thinking": false}' \
       --log-level INFO \
       >> "$LOG" 2>&1 &
   SERVER_PID=$!

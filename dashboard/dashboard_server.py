@@ -290,6 +290,55 @@ DASHBOARD_HTML = r"""<!doctype html>
   @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
   .pill.ok { background: #1f4531; color: var(--ok); }
   .pill.fail { background: #4d2130; color: var(--fail); }
+
+  /* LIVE banner — sticky strip at the very top, impossible to miss
+     Three explicit states (red = STOPPED, green = RUNNING):
+       .dead   sim is OFF  → red banner, solid red light
+       .idle   sim is UP, no episode firing → green banner, steady green light
+       (none)  sim is UP and an episode is running → green banner, pulsing green light */
+  .live-banner { position: sticky; top: 0; z-index: 100; padding: 12px 20px;
+                 background: linear-gradient(90deg, #0a3d2c 0%, #155544 50%, #0a3d2c 100%);
+                 border-bottom: 2px solid #2e6e54; display: flex; align-items: center;
+                 justify-content: space-between; gap: 14px;
+                 font-family: ui-monospace, monospace; }
+  .live-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+              background: #5dd39e; box-shadow: 0 0 14px #5dd39e;
+              animation: livepulse 1.1s infinite; }
+  @keyframes livepulse {
+      0% { transform: scale(1);    box-shadow: 0 0 14px #5dd39e; }
+     50% { transform: scale(1.25); box-shadow: 0 0 26px #5dd39e; }
+    100% { transform: scale(1);    box-shadow: 0 0 14px #5dd39e; }
+  }
+  .live-label { font-size: 18px; font-weight: 800; letter-spacing: 0.08em; color: #5dd39e; }
+  .live-task  { font-size: 15px; color: #e5e7ef; }
+  .live-task .name { font-weight: 600; color: #5dd39e; }
+  .live-task .for  { color: #848a9a; margin-left: 6px; font-size: 13px; }
+  .live-stats { display: flex; gap: 18px; font-size: 13px; color: #c8cfdb; }
+  .live-stats .v { font-weight: 700; color: #fff; font-size: 16px; }
+  .live-clock { font-size: 14px; color: #5dd39e; font-variant-numeric: tabular-nums; }
+
+  /* IDLE: sim alive but supervisor not running episodes → AMBER (not green!).
+     This makes it visually clear that nothing is being trained right now. */
+  .live-banner.idle { background: linear-gradient(90deg, #4a3a08 0%, #6b5413 50%, #4a3a08 100%);
+                      border-bottom-color: #b08a20; }
+  .live-banner.idle .live-dot { animation: none; box-shadow: none;
+                                background: #d9a72a; }
+  .live-banner.idle .live-label { color: #d9a72a; }
+  .live-banner.idle .live-task .name { color: #d9a72a; }
+  .live-banner.idle .live-clock { color: #d9a72a; }
+
+  /* DEAD: sim down → entire banner turns red, solid red light, no pulse */
+  .live-banner.dead {
+      background: linear-gradient(90deg, #4d0d12 0%, #7d1c25 50%, #4d0d12 100%);
+      border-bottom-color: #b03040;
+  }
+  .live-banner.dead .live-dot {
+      background: #ff3852; box-shadow: 0 0 16px #ff3852; animation: none;
+  }
+  .live-banner.dead .live-label { color: #ff8090; }
+  .live-banner.dead .live-task .name { color: #ff8090; }
+  .live-banner.dead .live-clock { color: #ff8090; }
+
   .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
   .ctrl { padding: 10px; background: var(--panel2); border-radius: 6px; }
   .ctrl .title { font-weight: 600; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
@@ -307,6 +356,17 @@ DASHBOARD_HTML = r"""<!doctype html>
 </style>
 </head>
 <body>
+
+<div class="live-banner idle" id="live-banner">
+  <div style="display:flex; align-items:center; gap:10px">
+    <span class="live-dot"></span>
+    <span class="live-label" id="live-label">CONNECTING…</span>
+  </div>
+  <div class="live-task" id="live-task">—</div>
+  <div class="live-stats" id="live-stats"></div>
+  <div class="live-clock" id="live-clock">--:--:--</div>
+</div>
+
 <header>
   <h1>🤖 Tron 1 · Hermes Agent · Progress Dashboard</h1>
   <div class="summary" id="summary"></div>
@@ -353,18 +413,64 @@ DASHBOARD_HTML = r"""<!doctype html>
 </div>
 
 <script>
+function updateClock() {
+  document.getElementById('live-clock').textContent = new Date().toLocaleTimeString();
+}
+setInterval(updateClock, 500);
+
 async function tick() {
   try {
     const j = await (await fetch('/api/state')).json();
-    document.getElementById('meta').textContent =
-      `sim ${j.sim_ok ? '✓' : '✗'}  ·  last update ${new Date().toLocaleTimeString()}`;
 
-    // Running success rate summary
-    const eps = j.episodes || [];
-    const total = j.episode_count || 0;
+    // ----- LIVE banner -----
+    const banner = document.getElementById('live-banner');
+    const lbl    = document.getElementById('live-label');
+    const tsk    = document.getElementById('live-task');
+    const stats  = document.getElementById('live-stats');
+    const r      = j.running_task;
+    const eps    = j.episodes || [];
     const passes = eps.filter(e => e.success).length;
+    const rate   = eps.length ? Math.round(passes/eps.length*100) : 0;
+    if (j.sim_ok && r) {
+      banner.classList.remove('idle','dead');
+      lbl.textContent = '● TRAINING';
+      tsk.innerHTML = `agent on <span class="name">${r.task}</span><span class="for">${r.started_ago_s.toFixed(0)} s in</span>`;
+    } else if (j.sim_ok) {
+      banner.classList.remove('dead');
+      banner.classList.add('idle');
+      lbl.textContent = '○ NOT TRAINING';
+      tsk.textContent = 'sim is up · supervisor is off · no episodes firing';
+    } else {
+      banner.classList.add('dead');
+      banner.classList.remove('idle');
+      lbl.textContent = '● OFFLINE';
+      tsk.textContent = 'simulation is not running at all';
+    }
+    const provLabel = j.agent && j.agent.provider === 'local'
+        ? `🖥️ local · ${(j.agent.model||'').replace('mlx-community/','')}`
+        : `☁️ ${j.agent ? j.agent.provider : '?'}`;
+    stats.innerHTML =
+      `<span><span class="v">${j.episode_count}</span> episodes</span>` +
+      `<span><span class="v">${rate}%</span> last ${eps.length}</span>` +
+      `<span style="opacity:0.7">${provLabel}</span>`;
+    // Agent provider pill
+    let agentPill = '';
+    if (j.agent) {
+      const isLocal = j.agent.provider === 'local';
+      const color   = isLocal ? '#1f4531' : '#5a2a36';
+      const fg      = isLocal ? 'var(--ok)' : 'var(--fail)';
+      const icon    = isLocal ? '🖥️ local' : '☁️  ' + j.agent.provider;
+      agentPill = `<span class="pill" style="background:${color};color:${fg};font-family:ui-monospace,monospace">
+          ${icon} · ${j.agent.model.replace('mlx-community/','')}
+        </span>`;
+    }
+    document.getElementById('meta').innerHTML =
+      agentPill +
+      `<span style="margin-left:10px">sim ${j.sim_ok ? '✓' : '✗'} · last update ${new Date().toLocaleTimeString()}</span>`;
+
+    // Running success rate summary (reuses eps/passes/rate from above)
+    const total = j.episode_count || 0;
     const recent = eps.length;
-    const rate = recent ? (passes / recent * 100).toFixed(0) : 0;
     const rateCls = rate >= 70 ? 'big' : 'big low';
     let runningBadge = '';
     if (j.running_task) {
@@ -542,15 +648,19 @@ def _api_state() -> bytes:
     episode_ends = [e for e in log if e.get("event") == "episode_end"]
     episode_starts = [e for e in log if e.get("event") == "episode_start"]
 
-    # Detect a currently-running episode: last start has no matching end
+    # Detect a currently-running episode: last start has no matching end AND
+    # the start was within a plausible task budget (≤ 600 s). Without the time
+    # cap, a self-play loop killed mid-episode leaves a phantom "running" entry
+    # forever.
     running_task = None
     if episode_starts:
         last_start = episode_starts[-1]
         running_id = last_start.get("episode_id")
-        if not any(e.get("episode_id") == running_id for e in episode_ends):
+        age = time.time() - last_start.get("ts", time.time())
+        if age <= 600 and not any(e.get("episode_id") == running_id for e in episode_ends):
             running_task = {
                 "task": last_start.get("task"),
-                "started_ago_s": round(time.time() - last_start.get("ts", time.time()), 1),
+                "started_ago_s": round(age, 1),
             }
 
     # Per-task stats
@@ -580,6 +690,27 @@ def _api_state() -> bytes:
 
     skills = read_skills()
 
+    # Who's actually powering the agent right now
+    agent_provider = "unknown"
+    agent_model = "unknown"
+    agent_backend = "unknown"
+    try:
+        from pathlib import Path as _P
+        import yaml as _y
+        cfg = _y.safe_load((_P.home() / ".hermes" / "config.yaml").read_text())
+        m = (cfg or {}).get("model", {}) or {}
+        agent_model = m.get("default", "") or "unknown"
+        prov = m.get("provider", "") or "auto"
+        base = m.get("base_url", "") or ""
+        if prov == "custom" and "127.0.0.1" in base or "localhost" in base:
+            agent_provider = "local"
+            agent_backend = base
+        else:
+            agent_provider = prov
+            agent_backend = base or "api"
+    except Exception:
+        pass
+
     resp = {
         "sim_ok": sim_alive,
         "episode_count": len(episode_ends),
@@ -592,6 +723,11 @@ def _api_state() -> bytes:
                     "size": s["size"], "body": s["body"]}
                    for s in skills],
         "components": component_status(),
+        "agent": {
+            "provider": agent_provider,    # "local" | "anthropic" | "openrouter" | …
+            "model":    agent_model,       # e.g. mlx-community/Qwen3-30B-A3B-4bit
+            "backend":  agent_backend,     # localhost url or "api"
+        },
     }
     return json.dumps(resp, default=str).encode()
 

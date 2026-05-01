@@ -39,7 +39,7 @@ def _sample_task(failure_boost: float = 1.5) -> T.Task:
     return random.choices(T.TASKS, weights=weights, k=1)[0]
 
 
-HERMES_MODEL = "mlx-community/Qwen3-14B-4bit"
+HERMES_MODEL = "mlx-community/Qwen3-8B-4bit"
 HERMES_PROVIDER = "auto"
 # (Historical: claude-opus-4-7 → claude-haiku-4-5 → local Qwen 3 14B 4-bit
 #  via mlx_lm.server at http://127.0.0.1:8080/v1. Zero API tokens.

@@ -19,7 +19,7 @@ set -u
 
 DURATION_SEC="${DURATION_SEC:-18000}"       # 5 hours default
 BATCH_ROUNDS="${BATCH_ROUNDS:-50}"          # rounds per spawned batch
-BATCH_DELAY="${BATCH_DELAY:-3}"             # seconds between episodes
+BATCH_DELAY="${BATCH_DELAY:-8}"             # seconds between episodes
 VENV="/Users/justinsuo/.hermes/hermes-agent/venv"
 SELFPLAY="/Users/justinsuo/tron1-selfplay/robotics_selfplay.py"
 SIM_SCRIPT="/Users/justinsuo/tron1-sim-mac/sim.py"
@@ -58,7 +58,7 @@ while [ "$(date +%s)" -lt "$END_TS" ]; do
   fi
 
   # Don't overlap with an existing self-play that's still running
-  if pgrep -f robotics_selfplay > /dev/null 2>&1; then
+  if pgrep -fl /tron1-selfplay/robotics_selfplay.py 2>/dev/null | grep -i python > /dev/null 2>&1; then
     log "self-play already running, waiting 30s"
     sleep 30
     continue
