@@ -1,11 +1,14 @@
-# Episode 0db0996a47
+# Episode 6c8d26b89c
 # Task: read-any-gauge
-# Success: False  reward=-0.30  reason=hermes exit 1
-# Elapsed: 62.2s
+# Success: False  reward=-0.10  reason=E err 12.5% (too high)
+# Elapsed: 171.4s
 # Prompt: There are 3 analog gauges in this room — NORTH at (0,5.85), EAST at (5.85,-1.5), WEST at (-5.85,2.0). Drive to any one of them and read it. Report JSON {"value": <float>, "units": "<str>"}.
 
 === TRANSCRIPT ===
-API call failed after 3 retries: Connection error.
+{
+  "value": 125.5,
+  "units": "psi"
+}
 
 
-session_id: 20260430_233522_826d95
+session_id: 20260515_040847_b96a0a

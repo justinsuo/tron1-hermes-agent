@@ -100,6 +100,20 @@ final answer.
 - 2026-04-21 charge run from (2.5, 2.5, yaw 0.3) → (-4.5, -4.0): 1 big turn burst (angular=1.0 × 2.0 s) to flip yaw to ≈-2.38 (target bearing), then 3 forward bursts at linear=1.0 for 3+3+2.5 s. Landed at (-4.30, -3.98), 0.20 m from target. Total 6 velocity calls.
 - **Dead-burst gotcha:** Very short/small commands (e.g. angular=-0.8 × 1.0 s, or linear=0.5 × 1.0 s) sometimes produce ZERO pose change in the Mac mujoco sim — the sidecar seems to swallow them. If pose is unchanged after a burst, re-issue with a longer duration (≥1.5–2 s) and/or higher magnitude rather than retrying the same command. Always check pose-delta, not just that the call returned ok.
 ## Failure notes
+- When far from home, directly use `tron1_goto` to HOME zone coordinates (0, -4) for efficient navigation.
+- When distance to target exceeds 9.14m, ensure velocity bursts are adjusted to account for longer travel times and potential obstacles.
+- When the robot reaches the target door coordinates but the task fails with 'far: 6.63m', verify that the door's exact position is correctly mapped in the world coordinates. This discrepancy might indicate a misalignment between the map and the actual environment.- When distance to landmark exceeds 9.14m, re-evaluate landmark identification to avoid false positives.
+- When the 'find-door' task fails with 'far: 5.95m', ensure the robot's navigation path accounts for potential obstacles or recalculates the shortest path to the landmark.
+- When the robot reports 'far: X m', it indicates the landmark is not in the immediate vicinity. Verify the landmark's location and adjust navigation strategy accordingly.
+- When the robot reports 'far: X m', it indicates the landmark is not in the immediate vicinity. Ensure the robot's sensors are calibrated and the environment is clear of obstacles.
+- When distance to landmark exceeds 9.14m, re-evaluate landmark identification to avoid false positives.
+- When the robot reports 'far: X m', it indicates the landmark is not in the immediate vicinity. Verify the landmark's location and adjust navigation strategy accordingly.
+- When the robot reaches the target location but the task fails with 'far: X.m', verify if the target coordinates are correctly calculated and if the robot's navigation algorithm accounts for potential obstacles or miscalculations in distance.- When the robot reports reaching the target location, verify if the final pose is within the acceptable error margin (e.g., < 0.5 m) to avoid false completions.
+- When reaching the target door, ensure the robot's orientation and position are correctly confirmed before finalizing the task to avoid false completions.
+- When distance to landmark exceeds 9.14m, re-evaluate landmark identification to avoid false positives.
+- When 'far' distance exceeds 10m, recalibrate approach immediately to avoid prolonged search.
+- Robot may overshoot the target landmark due to distance miscalculations. Verify the HOME zone coordinates and adjust the navigation algorithm for precision.
+- When distance to landmark exceeds 10 meters, verify GPS accuracy and recalibrate if necessary.
 
 
 
