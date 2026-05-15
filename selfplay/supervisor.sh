@@ -18,8 +18,9 @@
 set -u
 
 DURATION_SEC="${DURATION_SEC:-18000}"       # 5 hours default
-BATCH_ROUNDS="${BATCH_ROUNDS:-50}"          # rounds per spawned batch
-BATCH_DELAY="${BATCH_DELAY:-8}"             # seconds between episodes
+BATCH_ROUNDS="${BATCH_ROUNDS:-20}"          # smaller batches → more breathing
+BATCH_DELAY="${BATCH_DELAY:-20}"            # 20s between episodes (was 8s)
+                                            # — keeps GPU+VRAM cool on Apple Silicon
 VENV="/Users/justinsuo/.hermes/hermes-agent/venv"
 SELFPLAY="/Users/justinsuo/tron1-selfplay/robotics_selfplay.py"
 SIM_SCRIPT="/Users/justinsuo/tron1-sim-mac/sim.py"

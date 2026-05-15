@@ -95,8 +95,13 @@ class Sim:
         # self-play. The previous "not thread-safe" hang is avoided because
         # every call to get_image() holds self._lock (serialized).
         self._renderer: Optional["mujoco.Renderer"] = None
-        self._renderer_h = 480
-        self._renderer_w = 640
+        # Halved from 640x480 → 320x240. Cuts framebuffer + texture memory
+        # by 4x. Qwen 2.5 VL still reads gauges fine at this resolution,
+        # and self-play screenshot rate × resolution × 50-ep batches was
+        # the main GPU bandwidth driver behind the system-hang crashes.
+        # Env var lets ops bump it back up if needed.
+        self._renderer_h = int(os.getenv("TRON1_RENDER_H", "240"))
+        self._renderer_w = int(os.getenv("TRON1_RENDER_W", "320"))
 
         self.dt = 1.0 / hz
         self._stop = threading.Event()

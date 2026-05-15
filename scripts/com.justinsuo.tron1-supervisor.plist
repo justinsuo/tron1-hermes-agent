@@ -15,24 +15,26 @@
     <key>EnvironmentVariables</key>
     <dict>
         <key>DURATION_SEC</key>
-        <string>36000</string>   <!-- 10 hours -->
+        <string>14400</string>   <!-- 4 hours -->
         <key>BATCH_ROUNDS</key>
-        <string>50</string>
+        <string>20</string>      <!-- smaller batches -->
         <key>BATCH_DELAY</key>
-        <string>8</string>
+        <string>20</string>      <!-- 20s between episodes -->
         <key>PATH</key>
         <string>/Users/justinsuo/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
         <key>HOME</key>
         <string>/Users/justinsuo</string>
     </dict>
 
+    <!-- Auto-restart DISABLED after repeated Apple Silicon GPU/VRAM
+         saturation crashes. To re-enable later set both to true and run:
+           launchctl load ~/Library/LaunchAgents/com.justinsuo.tron1-supervisor.plist
+         To start a session manually:
+           bash ~/tron1-selfplay/supervisor.sh -->
     <key>RunAtLoad</key>
-    <true/>
-
-    <!-- KeepAlive: if supervisor exits (crashes, OOM, anything), launchd
-         respawns it. ThrottleInterval prevents rapid-fire restart loops. -->
+    <false/>
     <key>KeepAlive</key>
-    <true/>
+    <false/>
     <key>ThrottleInterval</key>
     <integer>60</integer>
 
