@@ -31,6 +31,7 @@ import json
 import logging
 import math
 import os
+import queue
 import socket
 import socketserver
 import sys
@@ -87,21 +88,20 @@ class Sim:
         self.ego_cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "ego")
         self.tp_cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "tp")
 
-        # Single persistent Renderer reused across get_image calls. Earlier
-        # versions created one per request, but on Apple Silicon the GPU
-        # shares VRAM with system RAM and per-request construction
-        # accumulated GL textures faster than they were reclaimed — observed
-        # symptom was the whole system hanging after ~30-60 minutes of
-        # self-play. The previous "not thread-safe" hang is avoided because
-        # every call to get_image() holds self._lock (serialized).
+        # The MuJoCo Renderer on macOS binds its GL context to the thread
+        # that created it. ThreadingMixIn spawns a new thread per TCP
+        # request, so creating the renderer lazily during a request would
+        # work the first time and then hang silently from any other
+        # thread (observed: get_image returning no data, no log entry).
+        #
+        # Fix: a dedicated render worker thread that exclusively owns the
+        # GL context. All get_image() calls (regardless of which request
+        # thread) enqueue a job onto _render_queue and wait on an event.
         self._renderer: Optional["mujoco.Renderer"] = None
-        # Halved from 640x480 → 320x240. Cuts framebuffer + texture memory
-        # by 4x. Qwen 2.5 VL still reads gauges fine at this resolution,
-        # and self-play screenshot rate × resolution × 50-ep batches was
-        # the main GPU bandwidth driver behind the system-hang crashes.
-        # Env var lets ops bump it back up if needed.
         self._renderer_h = int(os.getenv("TRON1_RENDER_H", "240"))
         self._renderer_w = int(os.getenv("TRON1_RENDER_W", "320"))
+        self._render_queue: queue.Queue = queue.Queue()
+        self._render_worker_thread: Optional[threading.Thread] = None
 
         self.dt = 1.0 / hz
         self._stop = threading.Event()
@@ -125,6 +125,9 @@ class Sim:
                 self._wheel_joints.append(self.model.jnt_qposadr[jid])
 
         self.reset()
+        # Start the render worker now so the first get_image call doesn't
+        # pay the thread-start latency.
+        self._start_render_worker()
 
     def _rebuild_model(self) -> None:
         """Reload the MJCF + data from disk so freshly-written gauge PNGs
@@ -347,20 +350,77 @@ class Sim:
             "ts": time.time(),
         }
 
-    def get_image(self, camera: str = "ego") -> bytes:
-        cam_id = self.ego_cam_id if camera == "ego" else self.tp_cam_id
-        with self._lock:
-            self._wall_step()
-            if self._renderer is None:
-                self._renderer = mujoco.Renderer(
-                    self.model, height=self._renderer_h, width=self._renderer_w,
-                )
-            self._renderer.update_scene(self.data, camera=cam_id)
-            pixels = self._renderer.render()
-        img = Image.fromarray(pixels)
-        buf = io.BytesIO()
-        img.save(buf, format="JPEG", quality=75)
-        return buf.getvalue()
+    def get_image(self, camera: str = "ego", timeout: float = 10.0) -> bytes:
+        """Render an off-screen camera frame as JPEG bytes.
+
+        On macOS the GL context belongs to whichever thread created the
+        Renderer; we forward all render work to a dedicated worker
+        thread via ``_render_queue`` so it doesn't matter which TCP
+        handler thread the caller is on.
+        """
+        if self._render_worker_thread is None or not self._render_worker_thread.is_alive():
+            self._start_render_worker()
+        evt = threading.Event()
+        slot: dict = {"jpg": None, "err": None}
+        self._render_queue.put((camera, evt, slot))
+        if not evt.wait(timeout=timeout):
+            raise TimeoutError(f"render worker did not respond within {timeout}s")
+        if slot["err"]:
+            raise slot["err"]
+        return slot["jpg"]
+
+    def _start_render_worker(self) -> None:
+        """Spawn the singleton render worker thread."""
+        if self._render_worker_thread is not None and self._render_worker_thread.is_alive():
+            return
+        t = threading.Thread(target=self._render_worker_loop, name="render-worker",
+                             daemon=True)
+        self._render_worker_thread = t
+        t.start()
+
+    def _render_worker_loop(self) -> None:
+        """Owns the MuJoCo Renderer + its GL context. Lives for the
+        duration of the Sim instance. Pulls jobs from _render_queue.
+
+        We do not hold self._lock here for the entire duration — we only
+        grab it briefly to copy out the data we need (camera id +
+        mj_forward). Rendering itself then runs without blocking
+        get_pose / health / etc. on other threads.
+        """
+        logger.info("render worker started (thread=%s)", threading.current_thread().name)
+        while True:
+            job = self._render_queue.get()
+            if job is None:  # shutdown sentinel
+                break
+            camera, evt, slot = job
+            try:
+                with self._lock:
+                    self._wall_step()
+                    if camera == "ego":
+                        cam_id = self.ego_cam_id
+                    elif camera == "top":
+                        # No dedicated 'top' camera in the MJCF; reuse tp
+                        # which is the chase cam — close enough for the
+                        # dashboard preview.
+                        cam_id = self.tp_cam_id
+                    else:
+                        cam_id = self.tp_cam_id
+                    if self._renderer is None:
+                        self._renderer = mujoco.Renderer(
+                            self.model,
+                            height=self._renderer_h, width=self._renderer_w,
+                        )
+                    self._renderer.update_scene(self.data, camera=cam_id)
+                pixels = self._renderer.render()
+                img = Image.fromarray(pixels)
+                buf = io.BytesIO()
+                img.save(buf, format="JPEG", quality=75)
+                slot["jpg"] = buf.getvalue()
+            except Exception as e:
+                logger.exception("render worker job failed: %s", e)
+                slot["err"] = e
+            finally:
+                evt.set()
 
     # World positions of everything the "perception" layer knows about
     _LANDMARKS: Dict[str, Tuple[float, float]] = {
