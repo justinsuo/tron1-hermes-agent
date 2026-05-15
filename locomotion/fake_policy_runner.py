@@ -19,11 +19,12 @@ from typing import Any, Dict, List, Sequence
 from .policy_interface import PolicyInterface
 
 
-# Default joint count for Tron 1 (4 active joints per leg × 2 legs = 8).
-# Real RL policies usually output 10 (8 joints + 2 wheels) depending on the
-# URDF revision — TODO: confirm against the trained checkpoint before
-# switching from FakePolicyRunner to PolicyRunner.
-_DEFAULT_ACTION_DIM = 10
+# WF_TRON1A actuated joint count = 8 (abad/hip/knee/wheel × 2 legs).
+# Confirmed against robot-description/pointfoot/WF_TRON1A/xml/robot.xml.
+# If a future LimX checkpoint outputs joint_pos_delta for only the 6
+# non-wheel joints (excluding the continuous wheel joints), pass
+# action_dim=6 at construction.
+_DEFAULT_ACTION_DIM = 8
 
 
 class FakePolicyRunner(PolicyInterface):
@@ -32,7 +33,7 @@ class FakePolicyRunner(PolicyInterface):
     def __init__(
         self,
         action_dim: int = _DEFAULT_ACTION_DIM,
-        obs_dim: int = 48,
+        obs_dim: int = 33,
         command_dim: int = 3,
     ) -> None:
         self._action_dim = action_dim

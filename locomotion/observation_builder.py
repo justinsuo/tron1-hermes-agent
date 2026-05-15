@@ -26,19 +26,27 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Sequence
 
 
-# TODO: confirm against robot-description/.../WF_TRON1A/urdf/robot.urdf
+# Confirmed against robot-description/pointfoot/WF_TRON1A/xml/robot.xml
+# (joint definitions, ranges in radians):
+#   abad_*  ±0.38 / ±1.40 (hip abduction)
+#   hip_*   ±1.01 / ±1.40 (hip pitch)
+#   knee_*  ±0.87 / ±1.36 (knee pitch)
+#   wheel_* continuous spinning joint (range ±1e6)
+# LimX-canonical ordering: left leg first, then right leg, abad → hip →
+# knee → wheel within each leg.
 JOINT_ORDER: List[str] = [
-    "L_HIP_R", "L_HIP_P", "L_KNEE_P", "L_WHEEL",
-    "R_HIP_R", "R_HIP_P", "R_KNEE_P", "R_WHEEL",
-    # Two extras kept so total = 10 (matches typical LimX export width).
-    # If the trained policy is 8-wide, set ``action_dim=8`` in
-    # PolicyRunner and trim this list.
-    "TORSO_PITCH",  # placeholder
-    "TORSO_ROLL",   # placeholder
+    "abad_L_Joint", "hip_L_Joint", "knee_L_Joint", "wheel_L_Joint",
+    "abad_R_Joint", "hip_R_Joint", "knee_R_Joint", "wheel_R_Joint",
 ]
 
-# TODO: from robot.urdf "home" pose. Currently neutral standing.
-DEFAULT_JOINT_POS: List[float] = [0.0] * len(JOINT_ORDER)
+# Neutral "standing" pose. The WF_TRON1A spec ships with all hinges at 0
+# (the URDF visualizes the robot standing straight) — abad and hip flex
+# are bilaterally symmetric. Wheels are continuous joints so their "home"
+# position is irrelevant for control; we keep 0.0.
+DEFAULT_JOINT_POS: List[float] = [
+    0.0, 0.0, 0.0, 0.0,  # left leg
+    0.0, 0.0, 0.0, 0.0,  # right leg
+]
 
 
 @dataclass

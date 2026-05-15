@@ -123,6 +123,22 @@ def _sidecar_pose() -> Optional[Dict[str, float]]:
     }
 
 
+def _sidecar_imu() -> Dict[str, Any]:
+    """Returns {base_quat_wxyz, base_ang_vel} or safe defaults if the op
+    isn't supported by the sidecar yet (older sim builds)."""
+    r = _sidecar_call({"op": "get_imu"})
+    if r.get("ok"):
+        return r.get("data") or {}
+    return {"base_quat_wxyz": [1.0, 0.0, 0.0, 0.0], "base_ang_vel": [0.0, 0.0, 0.0]}
+
+
+def _sidecar_joint_state() -> Dict[str, Any]:
+    r = _sidecar_call({"op": "get_joint_state"})
+    if r.get("ok"):
+        return r.get("data") or {}
+    return {"joint_pos": [], "joint_vel": [], "joint_names": []}
+
+
 def _sidecar_velocity(linear: float, angular: float, duration: float) -> Dict[str, Any]:
     return _sidecar_call({
         "op": "publish_cmd_vel",

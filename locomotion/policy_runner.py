@@ -52,8 +52,8 @@ class PolicyRunner(PolicyInterface):
     def __init__(
         self,
         checkpoint_path: str,
-        obs_dim: int = 48,
-        action_dim: int = 10,
+        obs_dim: int = 33,
+        action_dim: int = 8,
         command_dim: int = 3,
         device: str = "cpu",
     ) -> None:

@@ -87,8 +87,16 @@ class Sim:
         self.ego_cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "ego")
         self.tp_cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "tp")
 
-        # Renderer is created per-request in get_image(); keeping a
-        # persistent one caused hangs on macOS (not thread-safe).
+        # Single persistent Renderer reused across get_image calls. Earlier
+        # versions created one per request, but on Apple Silicon the GPU
+        # shares VRAM with system RAM and per-request construction
+        # accumulated GL textures faster than they were reclaimed — observed
+        # symptom was the whole system hanging after ~30-60 minutes of
+        # self-play. The previous "not thread-safe" hang is avoided because
+        # every call to get_image() holds self._lock (serialized).
+        self._renderer: Optional["mujoco.Renderer"] = None
+        self._renderer_h = 480
+        self._renderer_w = 640
 
         self.dt = 1.0 / hz
         self._stop = threading.Event()
@@ -133,6 +141,16 @@ class Sim:
                 jid = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, jname)
                 if jid >= 0:
                     self._wheel_joints.append(self.model.jnt_qposadr[jid])
+            # The persistent Renderer is bound to the old self.model — close
+            # and drop it so the next get_image() rebuilds against the new model.
+            if self._renderer is not None:
+                try:
+                    self._renderer.close()
+                except Exception:
+                    pass
+                self._renderer = None
+            # Clear cached joint-qpos lookup since joint ids may have changed.
+            self._joint_qposadr_cache = None
 
     def reset(self, pose: Optional[Tuple[float, float, float]] = None) -> None:
         """Reset robot. If pose=(x, y, yaw_rad) is given, teleport there;
@@ -156,6 +174,7 @@ class Sim:
             self.cmd_linear = [0.0, 0.0]
             self.cmd_angular = 0.0
             self.cmd_expiry = 0.0
+            self._initial_pose = {"x": x, "y": y, "z": 0.92, "yaw": yaw}
 
     def _apply_cmd(self) -> None:
         """Drive the robot kinematically by directly writing qpos each step.
@@ -249,18 +268,85 @@ class Sim:
             return {"x": float(p[0]), "y": float(p[1]), "z": float(p[2]),
                     "yaw": float(yaw)}
 
-    def get_image(self, camera: str = "ego") -> bytes:
-        cam_id = self.ego_cam_id if camera == "ego" else self.tp_cam_id
-        # MuJoCo's Renderer is not thread-safe. Create a fresh one per request
-        # so each TCP handler thread gets its own GL context.
+    def get_initial_pose(self) -> Dict[str, float]:
+        """Pose captured at the most recent reset(). Used by locomotion
+        graders to measure displacement against a known reference."""
+        return dict(getattr(self, "_initial_pose", {}) or {})
+
+    def get_imu(self) -> Dict[str, Any]:
+        """Approximate IMU readout. The kinematic backend doesn't run real
+        physics for the base, so angular velocity is the commanded yaw_rate
+        (when a burst is active) and the orientation comes from the floating
+        base quaternion."""
+        with self._lock:
+            q = list(self.data.qpos[self.robot_qpos_start + 3 : self.robot_qpos_start + 7])
+            now = time.time()
+            ang_z = float(self.cmd_angular) if now < self.cmd_expiry else 0.0
+        return {
+            "base_quat_wxyz": [float(q[0]), float(q[1]), float(q[2]), float(q[3])],
+            "base_ang_vel": [0.0, 0.0, ang_z],
+            "ts": time.time(),
+        }
+
+    # WF_TRON1A actuated joints, in the LimX-canonical order
+    _ACTUATED_JOINTS = (
+        "abad_L_Joint", "hip_L_Joint", "knee_L_Joint", "wheel_L_Joint",
+        "abad_R_Joint", "hip_R_Joint", "knee_R_Joint", "wheel_R_Joint",
+    )
+
+    def _resolve_joint_qposadr(self) -> List[int]:
+        """Cached lookup of qpos addresses for each actuated joint.
+        Returns -1 for joints that are absent from the current MJCF (e.g. if
+        the model omits the abad joints because the legs are mounted rigidly).
+        """
+        cached = getattr(self, "_joint_qposadr_cache", None)
+        if cached is not None:
+            return cached
+        addrs: List[int] = []
+        for jname in self._ACTUATED_JOINTS:
+            jid = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, jname)
+            addrs.append(int(self.model.jnt_qposadr[jid]) if jid >= 0 else -1)
+        self._joint_qposadr_cache = addrs
+        return addrs
+
+    def get_joint_state(self) -> Dict[str, Any]:
+        """Per-joint position/velocity in WF_TRON1A canonical order."""
+        addrs = self._resolve_joint_qposadr()
         with self._lock:
             self._wall_step()
-            renderer = mujoco.Renderer(self.model, height=480, width=640)
-            try:
-                renderer.update_scene(self.data, camera=cam_id)
-                pixels = renderer.render()
-            finally:
-                renderer.close()
+            pos: List[float] = []
+            vel: List[float] = []
+            for adr in addrs:
+                if adr < 0:
+                    pos.append(0.0)
+                    vel.append(0.0)
+                    continue
+                pos.append(float(self.data.qpos[adr]))
+                # qvel index ≠ qpos index for free joints; for hinge joints
+                # the qvel index equals qpos index minus the floating-base
+                # offset. Be safe: clamp into qvel range and fall back to 0.
+                qvel_idx = adr - 1  # works for all hinge joints after the freejoint
+                if 0 <= qvel_idx < len(self.data.qvel):
+                    vel.append(float(self.data.qvel[qvel_idx]))
+                else:
+                    vel.append(0.0)
+        return {
+            "joint_names": list(self._ACTUATED_JOINTS),
+            "joint_pos": pos,
+            "joint_vel": vel,
+            "ts": time.time(),
+        }
+
+    def get_image(self, camera: str = "ego") -> bytes:
+        cam_id = self.ego_cam_id if camera == "ego" else self.tp_cam_id
+        with self._lock:
+            self._wall_step()
+            if self._renderer is None:
+                self._renderer = mujoco.Renderer(
+                    self.model, height=self._renderer_h, width=self._renderer_w,
+                )
+            self._renderer.update_scene(self.data, camera=cam_id)
+            pixels = self._renderer.render()
         img = Image.fromarray(pixels)
         buf = io.BytesIO()
         img.save(buf, format="JPEG", quality=75)
@@ -414,6 +500,12 @@ def _handle(req: Dict[str, Any]) -> Dict[str, Any]:
             return {"ok": True, "data": _SIM.gauge_truth(wall)}
         if op == "all_gauges_truth":
             return {"ok": True, "data": _SIM.all_gauges_truth()}
+        if op == "get_initial_pose":
+            return {"ok": True, "data": _SIM.get_initial_pose()}
+        if op == "get_imu":
+            return {"ok": True, "data": _SIM.get_imu()}
+        if op == "get_joint_state":
+            return {"ok": True, "data": _SIM.get_joint_state()}
         return {"ok": False, "error": f"unknown op: {op!r}"}
     except Exception as e:
         logger.exception("handler error")
