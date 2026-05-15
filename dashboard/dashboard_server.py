@@ -28,6 +28,7 @@ import shlex
 import socket
 import socketserver
 import subprocess
+import threading
 import time
 import urllib.parse
 from pathlib import Path
@@ -498,11 +499,18 @@ async function tick() {
       `<span style="margin-left:6px">${spark}</span>` +
       runningBadge;
 
-    // Cameras: bump query string to bust cache
-    const t = Date.now();
-    document.getElementById('cam-top').src = `/api/cam?name=top&t=${t}`;
-    document.getElementById('cam-ego').src = `/api/cam?name=ego&t=${t}`;
-    document.getElementById('cam-tp').src  = `/api/cam?name=tp&t=${t}`;
+    // Cameras: stagger to one camera per tick (12s full rotation at 4s/tick)
+    // so dashboard polling can't compound with self-play vision calls on the
+    // sim renderer. ?nocams=1 in the URL disables all camera fetches for
+    // safe stats-only viewing. The server also rate-limits /api/cam, so
+    // even an aggressive client can't punish the renderer.
+    const params = new URLSearchParams(location.search);
+    if (params.get('nocams') !== '1') {
+      const t = Date.now();
+      const cams = ['top', 'ego', 'tp'];
+      const which = cams[window.__camIdx = ((window.__camIdx || 0) + 1) % cams.length];
+      document.getElementById(`cam-${which}`).src = `/api/cam?name=${which}&t=${t}`;
+    }
 
     // Pose
     const pk = document.getElementById('pose-kvs');
@@ -628,7 +636,11 @@ async function act(component, op, rounds) {
 }
 
 tick();
-setInterval(tick, 2000);
+// Slowed from 2000ms → 4000ms. Combined with camera staggering (one cam per
+// tick) this caps dashboard-induced renderer load at ~0.25 renders/sec —
+// down from ~1.5 renders/sec previously. The server also caches /api/cam
+// for 5s so even faster polling hits the cache.
+setInterval(tick, 4000);
 </script>
 </body>
 </html>
@@ -732,14 +744,40 @@ def _api_state() -> bytes:
     return json.dumps(resp, default=str).encode()
 
 
+_CAM_CACHE: dict[str, tuple[float, bytes]] = {}
+_CAM_CACHE_LOCK = threading.Lock()
+# Hard rate limit per camera. The dashboard JS busts cache with ?t=ts so
+# the browser requests faster than this; we serve a cached JPEG until the
+# TTL expires. This is the fix for repeated Apple Silicon system hangs:
+# dashboard polling was compounding with self-play vision calls on the
+# sim renderer until wired GPU memory saturated. Server-side cache caps
+# total render rate regardless of how many tabs are open.
+_CAM_CACHE_TTL_S = float(os.environ.get("TRON1_DASH_CAM_TTL", "5.0"))
+
+
 def _api_cam(query: dict) -> tuple[bytes, str]:
     name = query.get("name", ["tp"])[0]
+    if name not in ("top", "ego", "tp"):
+        name = "tp"
+    now = time.time()
+    with _CAM_CACHE_LOCK:
+        cached = _CAM_CACHE.get(name)
+        if cached and (now - cached[0]) < _CAM_CACHE_TTL_S:
+            return cached[1], "image/jpeg" if cached[1].startswith(b"\xff\xd8") else "image/png"
+        # mark the slot stale so concurrent misses don't double-fire the sim
+        _CAM_CACHE[name] = (now, _CAM_CACHE.get(name, (0.0, b""))[1])
     r = sim_call("get_image", timeout=5.0, camera=name)
     if not r.get("ok"):
-        # 1x1 transparent PNG fallback
+        # 1x1 transparent PNG fallback (also cache briefly so a sim
+        # outage doesn't spam retries).
         b = bytes.fromhex("89504e470d0a1a0a0000000d494844520000000100000001080600000015c14149000000014944415478da63600000000500017e8c04b00000000049454e44ae426082")
+        with _CAM_CACHE_LOCK:
+            _CAM_CACHE[name] = (time.time(), b)
         return b, "image/png"
-    return base64.b64decode(r["data"]["jpeg_base64"]), "image/jpeg"
+    jpg = base64.b64decode(r["data"]["jpeg_base64"])
+    with _CAM_CACHE_LOCK:
+        _CAM_CACHE[name] = (time.time(), jpg)
+    return jpg, "image/jpeg"
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
