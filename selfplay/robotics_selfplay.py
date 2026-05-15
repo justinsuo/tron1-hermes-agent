@@ -110,9 +110,20 @@ def _reflect_on_failure(task_id: str, reason: str, transcript_tail: str) -> None
         pass
 
 
+_REGEN_EVERY_N = 30  # rebuild model+textures every N episodes, not every one
+_episode_count = 0
+
+
 def run_one(backend: str) -> dict:
+    global _episode_count
     task = _sample_task()
-    T.reset_robot(task.reset_to)
+    _episode_count += 1
+    # Regen gauges occasionally so the agent doesn't memorize values, but
+    # don't do it every episode — it forces a full MJCF reload and
+    # destroys the persistent MuJoCo renderer, which on Apple Silicon
+    # accumulates wired GPU memory until the system hangs.
+    regen = (_episode_count % _REGEN_EVERY_N == 0)
+    T.reset_robot(task.reset_to, regen_gauges=regen)
     eid = robotics_log.start_episode(task.id, backend=backend)
     t0 = time.time()
 

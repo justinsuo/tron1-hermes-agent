@@ -289,10 +289,18 @@ TASKS: List[Task] = [
 # ---------------------------------------------------------------------------
 
 def reset_robot(pose: Tuple[float, float, float] | None = None,
-                regen_gauges: bool = True) -> None:
-    """Reset the sim to the given pose (x, y, yaw_rad), or default. When
-    regen_gauges is True, randomize the gauge textures so each episode
-    sees a different reading (avoids the agent cheating on stale state)."""
+                regen_gauges: bool = False) -> None:
+    """Reset the sim to the given pose (x, y, yaw_rad), or default.
+
+    regen_gauges defaults to **False** (was True). Setting it True calls
+    sim._rebuild_model() which reloads the MJCF and destroys+rebuilds the
+    MuJoCo Renderer — on Apple Silicon the GL textures aren't always
+    released promptly and after many episodes the wired GPU memory builds
+    until the whole system hangs. Gauges are already randomized once at
+    sim startup. If you want fresh values mid-session call
+    sim_call("reset", regen_gauges=True) explicitly every N episodes
+    rather than every reset.
+    """
     if pose is None:
         sim_call("reset", regen_gauges=regen_gauges)
     else:

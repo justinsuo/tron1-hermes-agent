@@ -148,12 +148,17 @@ class Sim:
                     self._wheel_joints.append(self.model.jnt_qposadr[jid])
             # The persistent Renderer is bound to the old self.model — close
             # and drop it so the next get_image() rebuilds against the new model.
+            # On Apple Silicon the GL driver doesn't always release textures
+            # immediately on close(); force a gc.collect() so any orphan
+            # CPython refs get collected before we recreate.
             if self._renderer is not None:
                 try:
                     self._renderer.close()
                 except Exception:
                     pass
                 self._renderer = None
+                import gc as _gc
+                _gc.collect()
             # Clear cached joint-qpos lookup since joint ids may have changed.
             self._joint_qposadr_cache = None
 
@@ -511,6 +516,18 @@ def _handle(req: Dict[str, Any]) -> Dict[str, Any]:
             return {"ok": True, "data": _SIM.get_imu()}
         if op == "get_joint_state":
             return {"ok": True, "data": _SIM.get_joint_state()}
+        if op == "health":
+            import os as _os
+            import resource
+            ru = resource.getrusage(resource.RUSAGE_SELF)
+            return {"ok": True, "data": {
+                "rss_mb": ru.ru_maxrss / (1024 * 1024) if ru.ru_maxrss > 10**7 else ru.ru_maxrss / 1024,
+                "pid": _os.getpid(),
+                "renderer_alive": _SIM._renderer is not None,
+                "render_h": _SIM._renderer_h,
+                "render_w": _SIM._renderer_w,
+                "ts": time.time(),
+            }}
         return {"ok": False, "error": f"unknown op: {op!r}"}
     except Exception as e:
         logger.exception("handler error")
