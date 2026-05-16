@@ -171,6 +171,37 @@ def run_one(backend: str) -> dict:
     }
 
 
+def _free_mem_pct() -> int:
+    """System-wide free memory %, via macOS `memory_pressure`. Returns
+    100 if it can't be read (fail-open — never block on a parse error)."""
+    try:
+        out = subprocess.run(["memory_pressure"], capture_output=True,
+                             text=True, timeout=5).stdout
+        import re
+        m = re.search(r"(\d+)%", out)
+        return int(m.group(1)) if m else 100
+    except Exception:
+        return 100
+
+
+def _wait_for_memory(floor: int = 45, max_wait_s: int = 120) -> None:
+    """Block until free memory is above `floor`%, or `max_wait_s` elapses.
+
+    Self-play paces itself: a heavy episode can leave the system low, and
+    starting the next episode immediately is what historically compounded
+    into a machine hang. Waiting for memory to settle (plus the memory
+    guardian as the hard backstop) keeps overnight runs safe.
+    """
+    waited = 0
+    while waited < max_wait_s:
+        if _free_mem_pct() >= floor:
+            return
+        time.sleep(5)
+        waited += 5
+    # Timed out — proceed anyway; the memory guardian will cull the
+    # episode if it actually runs the machine low.
+
+
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--rounds", type=int, default=10,
@@ -178,11 +209,16 @@ def main() -> int:
     p.add_argument("--delay", type=float, default=2.0,
                    help="Seconds to sleep between episodes.")
     p.add_argument("--backend", default="mujoco-mac")
+    p.add_argument("--mem-floor", type=int, default=45,
+                   help="Wait for this %% free memory before each episode.")
     args = p.parse_args()
 
     print(f"self-play on backend={args.backend} — {args.rounds or '∞'} rounds")
     ok, total = 0, 0
     for i in range(args.rounds if args.rounds > 0 else 10**9):
+        # Pace by memory: don't start an episode while the system is still
+        # recovering from the previous one.
+        _wait_for_memory(floor=args.mem_floor)
         result = run_one(args.backend)
         total += 1
         if result["success"]:
